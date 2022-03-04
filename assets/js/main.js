@@ -129,7 +129,7 @@ function renderCameras(cameras) {
 	const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 	pages = Math.ceil(filteredArray.length / PRODUCTS_PER_PAGE);
 
-	addCameras(filteredArray, pages);
+	addCameras(filteredArray);
 
 	const brands = document.querySelectorAll(".brand");
 	const sort = document.querySelector("#sort");
@@ -139,7 +139,7 @@ function renderCameras(cameras) {
 		searchQuery = e.target.value.toLowerCase();
 		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 
-		addCameras(filteredArray, pages);
+		addCameras(filteredArray);
 	});
 
 	// Brands checkboxes
@@ -159,7 +159,7 @@ function renderCameras(cameras) {
 
 			console.log(filterCameraArr);
 			const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
-			addCameras(filteredArray, pages);
+			addCameras(filteredArray);
 		});
 	});
 
@@ -173,15 +173,19 @@ function renderCameras(cameras) {
 		sortType = this.value;
 		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 
-		addCameras(filteredArray, pages);
+		addCameras(filteredArray);
 		localStorage.setItem("sort", sortType);
 	});
 }
 
-function addCameras(cameras, pages) {
+function addCameras(cameras) {
 	let html = "";
 
-	cameras.forEach((camera) => (html += makeCamera(camera)));
+	cameras.forEach((camera, index) => {
+		if (index < PRODUCTS_PER_PAGE) {
+			html += makeCamera(camera);
+		}
+	});
 
 	//If there is no product, return notification...
 	if (cameras.length === 0) {

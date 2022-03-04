@@ -141,7 +141,6 @@ li > button.btn:focus {
 /* My classes */
 .header {
 	transition: 0.3s;
-	position: fixed;
 	z-index: 99;
 	width: 100%;
 }
