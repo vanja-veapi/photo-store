@@ -57,7 +57,7 @@
     },
     {
         "id": 5,
-        "name": "Canon EOS 850D + EF-S 18-55mm f/4-5.6 IS STM",
+        "name": "Canon EOS 850D + EF-S 18-55mm",
         "img": {
             "src": "canon-eos-9d.jpg",
             "alt": "Canon EOS 850"
@@ -225,7 +225,7 @@
     },
     {
         "id": 17,
-        "name": "Canon EOS 4000D 18-55 III",
+        "name": "Canon EOS 4000D",
         "img": {
             "src": "Canon-EOS-4000D-18-55-III.jpg",
             "alt": "Canon EOS 4000D 18-55 III"

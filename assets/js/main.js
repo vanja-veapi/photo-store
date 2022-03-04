@@ -1,5 +1,5 @@
 const BASE_URL = "assets/data";
-const camerasID = document.querySelector("#cameras");
+const products = document.querySelector("#products");
 
 let brandsArr = [];
 
@@ -8,10 +8,31 @@ let sortType = "";
 let filterCameraArr = [];
 
 window.addEventListener("load", function () {
-	fetchData(BASE_URL + "/brands.json", renderBrands);
+	onReady(function () {
+		let isVisible = setVisible("#loading", false);
+		console.log(isVisible);
+		if (isVisible === "none") {
+			document.querySelector("body").classList.remove("overflow-hidden");
+		}
+	});
+
+	if (this.window.location.pathname === "/shop.html") {
+		fetchData(BASE_URL + "/brands.json", renderBrands);
+	}
 });
 
 // Common functions
+function onReady(callback) {
+	var intervalId = window.setInterval(function () {
+		if (document.getElementsByTagName("body")[0] !== undefined) {
+			window.clearInterval(intervalId);
+			callback.call(this);
+		}
+	}, 1000);
+}
+function setVisible(selector, visible) {
+	return (document.querySelector(selector).style.display = visible ? "block" : "none");
+}
 function fetchData(path, callback, method = "GET") {
 	$.ajax({
 		url: `${path}`,
@@ -134,19 +155,21 @@ function addCameras(cameras) {
 	if (cameras.length === 0) {
 		html = '<div class="alert alert-primary" role="alert">There are no products</div>';
 	}
-	camerasID.innerHTML = html;
+	products.innerHTML = html;
 }
 
 function makeCamera(camera) {
 	let cameraBrand = brandsArr.find((brand) => brand.id === camera.brandId).name;
 
-	return `<div class="card">
-    <img src="assets/images/products/${camera.img.src}" alt="${camera.img.alt}" width="250" />
-    <h6>${cameraBrand}</h6>
-    <h5>${camera.name}</h5>
-    <div class="price">
-        <p>${camera.price.current}</p>
-        ${camera.price.old === null ? "" : `<small><s>${camera.price.old}</s></small>`}
+	return `<div class="card col-12 col-md-6 col-lg-3 text-center">
+    <div class="d-flex justify-content-center align-items-center">
+		<img src="assets/images/products/${camera.img.src}" alt="${camera.img.alt}" width="250" class="img-fluid"/>
+	</div>
+    <h4 class="text-orange">${camera.name}</h4>
+    <h6 class="h5">${cameraBrand}</h6>
+    <div class="price d-flex justify-content-center">
+        <p>${camera.price.current} &euro;</p>
+        ${camera.price.old === null ? "" : `<s class="ms-3"><small class="text-muted">${camera.price.old}&euro;</small></s>`}
     </div>
 </div>`;
 }

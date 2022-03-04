@@ -3,42 +3,138 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=, initial-scale=1.0" />
-		<title>Document</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="keywords" content="Photo store, dslr, mirroless, canon, nikon, fuji" />
+		<meta name="description" content="The biggest choice cameras in the region. The best and quality equpiment only in our store. Everyday discount." />
+		<meta name="author" content="Vanja Veapi" />
+		<title>Photo Store | Home</title>
+		<!-- FaFa -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<!-- Bootstrap -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css" />
 	</head>
-	<body>
-		<div class="div-search">
-			<input type="text" name="search" id="search" placeholder="Find your model.." />
-		</div>
+	<body class="overflow-hidden">
+		<div id="loading" class="loader"></div>
+		<div class="container-fluid">
+			<!-- Header -->
+			<section class="header-bg position-relative">
+				<header class="bg-dark d-flex justify-content-between align-items-center">
+					<a href="index.html"><img src="assets/images/logo-cart-1.png" alt="Logo" class="img-fluid logo ms-4" /></a>
+					<nav class="me-4">
+						<ul class="d-flex align-items-center">
+							<li class="list-group-item d-none d-sm-none d-md-block"><a href="#" class="active">Home</a></li>
+							<li class="list-group-item d-none d-sm-none d-md-block"><a href="shop.html">Shop</a></li>
+							<li class="list-group-item d-none d-sm-none d-md-block"><a href="#">Contact</a></li>
+							<li id="hamburger" class="list-group-item d-block d-md-none text-white">
+								<p>BURGER</p>
+							</li>
+							<li id="cart" class="list-group-item cart position-relative">
+								<p class="articals-in-cart bg-primary position-absolute">99+</p>
+								<button class="btn position-relative"><i class="fa fa-shopping-cart text-white"></i></button>
+							</li>
+						</ul>
+					</nav>
+				</header>
+				<div class="container title d-flex justify-content-center align-items-center flex-column text-white text-center">
+					<h1>PhotoStore</h1>
+					<h2>The biggest choice cameras in the region</h2>
+				</div>
+				<div class="rectangle position-absolute"></div>
+			</section>
+			<!-- Header end -->
 
-		<div id="div-sort">
-			<select name="" id="sort">
-				<option value="reset">Reset</option>
-				<option value="asc">Asc</option>
-				<option value="desc">Desc</option>
-			</select>
-		</div>
-		<div class="kontejner">
-			<ul id="brands">
-				<li class="list-group-item">
-					<input type="checkbox" class="brand" />
-					Brand 1
-				</li>
-			</ul>
-			<div id="cameras">
-				<div class="card">
-					<img src="assets/images/products/Canon-EOS-250D-18-55-IS-STM.jpg" alt="Kamera" width="250" />
-					<h6>Brand name</h6>
-					<h5>Model name</h5>
-					<div class="price">
-						<p>Current</p>
-						<small><s>old</s></small>
+			<!-- Popular products slider -->
+			<section class="popular-product-slider mb-5 overflow-hidden">
+				<div class="container">
+					<h3 class="text-center mb-5">The most popular product</h3>
+					<div class="article-container d-flex justify-content-around align-items-center">
+						<i class="fa fa-chevron-left arrows d-flex justify-content-center align-items-center d-none d-md-block"></i>
+						<div id="article-slider" class="article-slider d-flex justify-content-around align-items-center">
+							<div class="article">
+								<img src="assets/images/products/d3300.jpeg" alt="d3300" class="img-fluid position-relative" />
+								<p>NIKON D3300</p>
+								<p>Price: 500 &euro;</p>
+								<p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+							</div>
+							<div class="article">
+								<img src="assets/images/products/d3300.jpeg" alt="d3300" class="img-fluid position-relative" />
+								<p>NIKON D3400</p>
+								<p>Price: 700 &euro;</p>
+								<p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+							</div>
+							<div class="article">
+								<img src="assets/images/products/d3300.jpeg" alt="d3300" class="img-fluid position-relative" />
+								<p>NIKON D3500</p>
+								<p>Price: 800 &euro;</p>
+								<p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+							</div>
+						</div>
+						<i class="fa fa-chevron-right arrows d-flex justify-content-center align-items-center d-none d-md-block"></i>
 					</div>
 				</div>
-			</div>
+			</section>
+			<!-- Popular products slider end -->
+
+			<!-- About us -->
+			<section class="about bg-orange">
+				<div class="container p-3 d-flex justify-content-around align-items-center">
+					<div class="about-left text-white">
+						<h4 class="pt-4 mb-4">About us</h4>
+						<p class="mb-3">We’re a new store company and we’re offering the best products in the region. If you are not satisfied with a product, we guarantee a cashback of 100%.</p>
+						<p>If you have some questions, feel free to ask by email: photostore@gmail.com</p>
+					</div>
+					<div class="about-right d-flex flex-wrap justify-content-center align-items-center d-md-block">
+						<img src="assets/images/thumbs-up.png" alt="Thumbs up" class="img-fluid position-relative" />
+						<img src="assets/images/camera.png" alt="Camera" class="img-fluid position-relative" />
+					</div>
+				</div>
+			</section>
+			<!-- About us end -->
+
+			<!-- Parallax image -->
+			<div class="container-fluid parallax"></div>
+			<!-- Parallax image end -->
+
+			<!-- Useful links -->
+			<section class="bg-orange">
+				<div class="useful-links container py-5 py-lg-0">
+					<div class="row align-items-center">
+						<div class="col-lg-4 d-flex flex-column align-items-center">
+							<h5>Useful links</h5>
+							<ul class="list-group">
+								<li class="list-group-item"><a href="#">Documentation</a></li>
+								<li class="list-group-item"><a href="#">Github</a></li>
+							</ul>
+						</div>
+						<div class="col-lg-4 d-flex flex-column align-items-center my-4 my-lg-0">
+							<img src="assets/images/logo-cart-1.png" alt="logo" class="img-fluid logo-footer" />
+							<p class="text-white fw-light">Photo Store</p>
+						</div>
+						<div class="col-lg-4 d-flex flex-column align-items-center">
+							<h5>Connect</h5>
+							<ul class="list-group">
+								<li class="list-group-item"><a href="#">Facebook</a></li>
+								<li class="list-group-item"><a href="#">Twitter</a></li>
+								<li class="list-group-item"><a href="#">LinkedIn</a></li>
+								<li class="list-group-item"><a href="#">E-mail</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<footer class="container-fluid d-flex align-items-center justify-content-center">
+					<h6>&copy; Vanja Veapi | 2022</h6>
+				</footer>
+			</section>
+			<!-- Useful links end -->
 		</div>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+		<!-- Bootstrap JS & jQuery-->
+		<script src="assets/js/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+		<!-- Main JS -->
 		<script src="assets/js/main.js"></script>
 	</body>
 </html>
