@@ -1,23 +1,39 @@
 const BASE_URL = "assets/data";
-const products = document.querySelector("#products");
+
+const PRODUCTS = document.querySelector("#products");
+const SEARCH = document.querySelector("#search");
+const HEADER = document.querySelector("header");
+const scrollY = window.scrollY;
 
 let brandsArr = [];
 
 let searchQuery = "";
-let sortType = "";
-let filterCameraArr = [];
+let sortType = localStorage.getItem("sort");
+let filterCameraArr = JSON.parse(localStorage.getItem("cameras")) === null ? [] : JSON.parse(localStorage.getItem("cameras"));
+
+const PRODUCTS_PER_PAGE = 10;
+const PAGINATION = document.querySelector("#pagination");
+let pages = 0;
 
 window.addEventListener("load", function () {
-	onReady(function () {
-		let isVisible = setVisible("#loading", false);
-		console.log(isVisible);
-		if (isVisible === "none") {
-			document.querySelector("body").classList.remove("overflow-hidden");
-		}
-	});
+	onReady(onReadyCallback);
+	if (this.scrollY >= 50) {
+		HEADER.classList.add("bg-dark", "size");
+	} else {
+		HEADER.classList.remove("bg-dark", "size");
+	}
 
 	if (this.window.location.pathname === "/shop.html") {
+		SEARCH.value = "";
 		fetchData(BASE_URL + "/brands.json", renderBrands);
+	}
+});
+
+window.addEventListener("scroll", function () {
+	if (this.scrollY >= 50) {
+		HEADER.classList.add("bg-dark", "size");
+	} else {
+		HEADER.classList.remove("bg-dark", "size");
 	}
 });
 
@@ -30,6 +46,14 @@ function onReady(callback) {
 		}
 	}, 1000);
 }
+function onReadyCallback() {
+	let isVisible = setVisible("#loading", false);
+	console.log(isVisible);
+	if (isVisible === "none") {
+		document.querySelector("body").classList.remove("overflow-hidden");
+	}
+}
+
 function setVisible(selector, visible) {
 	return (document.querySelector(selector).style.display = visible ? "block" : "none");
 }
@@ -74,11 +98,11 @@ function filtered(data, searchQuery, sortQuery, cameraArr) {
 	return filtered;
 }
 
-function sorting(data, sortQuery) {
+function sorting(data, sortType) {
 	data.sort((a, b) => {
-		if (sortQuery === "asc") {
+		if (sortType === "asc") {
 			return a.price.current - b.price.current;
-		} else if (sortQuery === "desc") {
+		} else if (sortType === "desc") {
 			return b.price.current - a.price.current;
 		}
 	});
@@ -103,19 +127,22 @@ function renderBrands(brands) {
 // Cameras
 function renderCameras(cameras) {
 	const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
-	addCameras(filteredArray);
+	pages = Math.ceil(filteredArray.length / PRODUCTS_PER_PAGE);
 
-	const search = document.querySelector("#search");
+	addCameras(filteredArray, pages);
+
 	const brands = document.querySelectorAll(".brand");
 	const sort = document.querySelector("#sort");
 
-	search.addEventListener("input", function (e) {
+	//Search cameras in input field
+	SEARCH.addEventListener("input", function (e) {
 		searchQuery = e.target.value.toLowerCase();
 		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 
-		addCameras(filteredArray);
+		addCameras(filteredArray, pages);
 	});
 
+	// Brands checkboxes
 	brands.forEach((brand) => {
 		if (filterCameraArr.some((id) => id === Number(brand.value))) {
 			brand.checked = true;
@@ -123,53 +150,60 @@ function renderCameras(cameras) {
 		brand.addEventListener("change", function () {
 			if (this.checked) {
 				filterCameraArr.push(Number(this.value));
-				//LS
+				localStorage.setItem("cameras", JSON.stringify(filterCameraArr));
 			} else {
 				let index = filterCameraArr.indexOf(Number(this.value));
 				filterCameraArr.splice(index, 1);
-				//ls
+				localStorage.setItem("cameras", JSON.stringify(filterCameraArr));
 			}
 
 			console.log(filterCameraArr);
 			const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
-			addCameras(filteredArray);
+			addCameras(filteredArray, pages);
 		});
 	});
 
+	//Cameras Sort
+	for (let i = 0; i < sort.length; i++) {
+		if (sort[i].value === localStorage.getItem("sort")) {
+			sort[i].selected = true;
+		}
+	}
 	sort.addEventListener("change", function () {
 		sortType = this.value;
 		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 
-		addCameras(filteredArray);
-		// LS
+		addCameras(filteredArray, pages);
+		localStorage.setItem("sort", sortType);
 	});
 }
-function addCameras(cameras) {
+
+function addCameras(cameras, pages) {
 	let html = "";
 
-	for (let camera of cameras) {
-		html += makeCamera(camera);
-	}
+	cameras.forEach((camera) => (html += makeCamera(camera)));
 
 	//If there is no product, return notification...
 	if (cameras.length === 0) {
-		html = '<div class="alert alert-primary" role="alert">There are no products</div>';
+		html = '<div class="alert alert-warning" role="alert">There are no products</div>';
 	}
-	products.innerHTML = html;
+	PRODUCTS.innerHTML = html;
 }
 
 function makeCamera(camera) {
 	let cameraBrand = brandsArr.find((brand) => brand.id === camera.brandId).name;
 
-	return `<div class="card col-12 col-md-6 col-lg-3 text-center">
-    <div class="d-flex justify-content-center align-items-center">
-		<img src="assets/images/products/${camera.img.src}" alt="${camera.img.alt}" width="250" class="img-fluid"/>
+	return `<div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
+	<div class="card text-center position-relative">
+		<div class="d-flex justify-content-center align-items-center">
+			<img src="assets/images/products/${camera.img.src}" alt="${camera.img.alt}" width="250" class="img-fluid"/>
+		</div>
+		<h4 class="text-orange h5 mt-3">${camera.name}</h4>
+		<h6 class="h5">${cameraBrand}</h6>
+		<div class="price d-flex justify-content-center mb-3">
+			<p class="h3">${camera.price.current} &euro;</p>
+			${camera.price.old === null ? "" : `<s class="ms-3"><small class="text-muted">${camera.price.old}&euro;</small></s>`}
+		</div>
 	</div>
-    <h4 class="text-orange">${camera.name}</h4>
-    <h6 class="h5">${cameraBrand}</h6>
-    <div class="price d-flex justify-content-center">
-        <p>${camera.price.current} &euro;</p>
-        ${camera.price.old === null ? "" : `<s class="ms-3"><small class="text-muted">${camera.price.old}&euro;</small></s>`}
-    </div>
 </div>`;
 }
