@@ -1,4 +1,5 @@
 const BASE_URL = "assets/data";
+let allCameras = [];
 
 const PRODUCTS = document.querySelector("#products");
 const SEARCH = document.querySelector("#search");
@@ -11,9 +12,8 @@ let searchQuery = "";
 let sortType = localStorage.getItem("sort");
 let filterCameraArr = JSON.parse(localStorage.getItem("cameras")) === null ? [] : JSON.parse(localStorage.getItem("cameras"));
 
-const PRODUCTS_PER_PAGE = 10;
-const PAGINATION = document.querySelector("#pagination");
-let pages = 0;
+const RECORDS_PER_PAGE = 10;
+let currentPage = 1;
 
 window.addEventListener("load", function () {
 	onReady(onReadyCallback);
@@ -37,7 +37,6 @@ window.addEventListener("scroll", function () {
 	}
 });
 
-// Common functions
 function onReady(callback) {
 	var intervalId = window.setInterval(function () {
 		if (document.getElementsByTagName("body")[0] !== undefined) {
@@ -71,33 +70,6 @@ function fetchData(path, callback, method = "GET") {
 	});
 }
 
-/**
- * @param {object} item - Data from json
- * @param {String} className
- * @returns
- */
-function makeListItem(item, className) {
-	return `<li class="list-group-item">
-    <input type="checkbox" value="${item.id}" class="${className}" name="${className}"/> ${item.name}
-</li>`;
-}
-
-/**
- * Function which pair all sorts and functions...
- * @param {object} data
- * @param {string} searchQuery
- * @returns
- */
-function filtered(data, searchQuery, sortQuery, cameraArr) {
-	let filtered = data.filter((e) => e.name.toLowerCase().includes(searchQuery));
-	filtered = sorting(filtered, sortQuery);
-
-	if (cameraArr.length !== 0) {
-		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
-	}
-	return filtered;
-}
-
 function sorting(data, sortType) {
 	data.sort((a, b) => {
 		if (sortType === "asc") {
@@ -126,13 +98,26 @@ function renderBrands(brands) {
 
 // Cameras
 function renderCameras(cameras) {
+	allCameras = cameras;
+
 	const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
-	pages = Math.ceil(filteredArray.length / PRODUCTS_PER_PAGE);
+	let pages = numPages(filteredArray);
 
 	addCameras(filteredArray);
+	addPageNumber(pages);
 
-	const brands = document.querySelectorAll(".brand");
-	const sort = document.querySelector("#sort");
+	const PAGES = document.querySelectorAll(".pages");
+	console.log(PAGES);
+	PAGES.forEach((page) =>
+		page.addEventListener("click", function (e) {
+			e.preventDefault();
+			const pageNum = e.target.dataset.id;
+			changePage(pageNum);
+		})
+	);
+
+	const BRANDS = document.querySelectorAll(".brand");
+	const SORT = document.querySelector("#sort");
 
 	//Search cameras in input field
 	SEARCH.addEventListener("input", function (e) {
@@ -143,7 +128,7 @@ function renderCameras(cameras) {
 	});
 
 	// Brands checkboxes
-	brands.forEach((brand) => {
+	BRANDS.forEach((brand) => {
 		if (filterCameraArr.some((id) => id === Number(brand.value))) {
 			brand.checked = true;
 		}
@@ -157,19 +142,18 @@ function renderCameras(cameras) {
 				localStorage.setItem("cameras", JSON.stringify(filterCameraArr));
 			}
 
-			console.log(filterCameraArr);
 			const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 			addCameras(filteredArray);
 		});
 	});
 
 	//Cameras Sort
-	for (let i = 0; i < sort.length; i++) {
-		if (sort[i].value === localStorage.getItem("sort")) {
-			sort[i].selected = true;
+	for (let i = 0; i < SORT.length; i++) {
+		if (SORT[i].value === localStorage.getItem("sort")) {
+			SORT[i].selected = true;
 		}
 	}
-	sort.addEventListener("change", function () {
+	SORT.addEventListener("change", function () {
 		sortType = this.value;
 		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
 
@@ -182,7 +166,7 @@ function addCameras(cameras) {
 	let html = "";
 
 	cameras.forEach((camera, index) => {
-		if (index < PRODUCTS_PER_PAGE) {
+		if (index < RECORDS_PER_PAGE) {
 			html += makeCamera(camera);
 		}
 	});
@@ -211,3 +195,60 @@ function makeCamera(camera) {
 	</div>
 </div>`;
 }
+
+/**
+ * @param {object} item - Data from json
+ * @param {String} className
+ * @returns
+ */
+function makeListItem(item, className) {
+	return `<li class="list-group-item">
+    <input type="checkbox" value="${item.id}" class="${className}" name="${className}"/> ${item.name}
+</li>`;
+}
+
+/**
+ * Function which pair all sorts and functions...
+ * @param {object} data
+ * @param {string} searchQuery
+ * @returns
+ */
+function filtered(data, searchQuery, sortQuery, cameraArr) {
+	let filtered = data.filter((e) => e.name.toLowerCase().includes(searchQuery));
+	filtered = sorting(filtered, sortQuery);
+
+	if (cameraArr.length !== 0) {
+		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
+	}
+	return filtered;
+}
+
+function numPages(objJSON) {
+	return Math.ceil(objJSON.length / RECORDS_PER_PAGE);
+}
+function changePage(pageNum) {
+	console.log("Promena stranice " + pageNum);
+
+	let html = "";
+	console.log(pageNum);
+	for (var i = (pageNum - 1) * RECORDS_PER_PAGE; i < pageNum * RECORDS_PER_PAGE; i++) {
+		if (allCameras[i] === undefined) {
+			break;
+		}
+		html += makeCamera(allCameras[i]);
+	}
+	PRODUCTS.innerHTML = html;
+	console.log(html);
+}
+function addPageNumber(pages) {
+	const PAGINATION = document.querySelector("#pagination");
+
+	let html = "";
+	for (let i = 0; i < pages; i++) {
+		html += `<li class="list-group-item border pages" data-id="${i + 1}"><a href="#" class="text-dark" data-id="${i + 1}">${i + 1}</a></li>`;
+	}
+
+	PAGINATION.innerHTML = html;
+}
+
+//Paginacija radi, samo namestiti da posle filtriranja ostane ta strana...
