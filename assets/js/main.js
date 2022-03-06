@@ -7,8 +7,8 @@ const cart = document.querySelector("#cart");
 const modal = document.querySelector("#modal");
 const scrollY = window.scrollY;
 
-let allCameras = []; // allCameras take all cameras and put in this array, for global purpose
-let brandsArr = []; // BrandsArr take all brands and put in this array, for global purpose
+let allCameras = []; // allCameras take all cameras and put in this array, for global purpose.
+let brandsArr = []; // BrandsArr take all brands and put in this array, for global purpose.
 
 let searchQuery = "";
 let sortType = localStorage.getItem("sort");
