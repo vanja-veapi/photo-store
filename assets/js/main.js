@@ -1,16 +1,18 @@
 const BASE_URL = "assets/data";
-let allCameras = [];
 
-const PRODUCTS = document.querySelector("#products");
-const SEARCH = document.querySelector("#search");
-const HEADER = document.querySelector("header");
+const header = document.querySelector("header");
+const products = document.querySelector("#products");
+const search = document.querySelector("#search");
+const cart = document.querySelector("#cart");
+const modal = document.querySelector("#modal");
 const scrollY = window.scrollY;
 
-let brandsArr = [];
+let allCameras = []; // allCameras take all cameras and put in this array, for global purpose
+let brandsArr = []; // BrandsArr take all brands and put in this array, for global purpose
 
 let searchQuery = "";
 let sortType = localStorage.getItem("sort");
-let filterCameraArr = JSON.parse(localStorage.getItem("cameras")) === null ? [] : JSON.parse(localStorage.getItem("cameras"));
+let filterCameraBrandsArr = JSON.parse(localStorage.getItem("cameras")) === null ? [] : JSON.parse(localStorage.getItem("cameras"));
 
 const RECORDS_PER_PAGE = 10;
 let currentPage = 1;
@@ -18,22 +20,27 @@ let currentPage = 1;
 window.addEventListener("load", function () {
 	onReady(onReadyCallback);
 	if (this.scrollY >= 50) {
-		HEADER.classList.add("bg-dark", "size");
+		header.classList.add("bg-dark", "size");
 	} else {
-		HEADER.classList.remove("bg-dark", "size");
+		header.classList.remove("bg-dark", "size");
 	}
 
 	if (this.window.location.pathname === "/shop.html") {
-		SEARCH.value = "";
+		search.value = "";
 		fetchData(BASE_URL + "/brands.json", renderBrands);
 	}
+
+	modal.style.transform = "translateX(0%)"
+	cart.addEventListener("click", toggleModal);
 });
 
 window.addEventListener("scroll", function () {
 	if (this.scrollY >= 50) {
-		HEADER.classList.add("bg-dark", "size");
+		header.classList.add("bg-dark", "size");
+		modal.style.top = "80px";
 	} else {
-		HEADER.classList.remove("bg-dark", "size");
+		header.classList.remove("bg-dark", "size");
+		modal.style.removeProperty("top");
 	}
 });
 
@@ -47,7 +54,6 @@ function onReady(callback) {
 }
 function onReadyCallback() {
 	let isVisible = setVisible("#loading", false);
-	console.log(isVisible);
 	if (isVisible === "none") {
 		document.querySelector("body").classList.remove("overflow-hidden");
 	}
@@ -100,19 +106,35 @@ function renderBrands(brands) {
 function renderCameras(cameras) {
 	allCameras = cameras;
 
-	const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
-	let pages = numPages(filteredArray);
+	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
+	// Ovu funkciju i addPageNumber cu da pozovem u filtered
+	let pageNumber = numPages(cameras);
+	addPageNumber(pageNumber);
 	addCameras(filteredArray);
-	addPageNumber(pages);
 
-	const PAGES = document.querySelectorAll(".pages");
-	console.log(PAGES);
-	PAGES.forEach((page) =>
+	const pages = document.querySelectorAll(".pages");
+	let activePage = 0;
+	pages[activePage].classList.add("active");
+
+	pages.forEach((page) =>
 		page.addEventListener("click", function (e) {
 			e.preventDefault();
-			const pageNum = e.target.dataset.id;
-			changePage(pageNum);
+
+			currentPage = e.target.dataset.id;
+			if (e.target !== this || e.target) {
+				this.classList.add("active")
+			}
+			if (activePage != currentPage - 1) {
+				console.log(activePage, currentPage);
+				pages[activePage].classList.remove("active");
+			}
+			console.log(pages[activePage]);
+			activePage = currentPage - 1;
+			console.log(activePage);
+
+			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
+			addCameras(filteredArray);
 		})
 	);
 
@@ -120,29 +142,30 @@ function renderCameras(cameras) {
 	const SORT = document.querySelector("#sort");
 
 	//Search cameras in input field
-	SEARCH.addEventListener("input", function (e) {
+	search.addEventListener("input", function (e) {
 		searchQuery = e.target.value.toLowerCase();
-		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
+		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
 		addCameras(filteredArray);
 	});
 
 	// Brands checkboxes
 	BRANDS.forEach((brand) => {
-		if (filterCameraArr.some((id) => id === Number(brand.value))) {
+		if (filterCameraBrandsArr.some((id) => id === Number(brand.value))) {
 			brand.checked = true;
 		}
 		brand.addEventListener("change", function () {
 			if (this.checked) {
-				filterCameraArr.push(Number(this.value));
-				localStorage.setItem("cameras", JSON.stringify(filterCameraArr));
+				filterCameraBrandsArr.push(Number(this.value));
+				localStorage.setItem("cameras", JSON.stringify(filterCameraBrandsArr));
 			} else {
-				let index = filterCameraArr.indexOf(Number(this.value));
-				filterCameraArr.splice(index, 1);
-				localStorage.setItem("cameras", JSON.stringify(filterCameraArr));
+				let index = filterCameraBrandsArr.indexOf(Number(this.value));
+				filterCameraBrandsArr.splice(index, 1);
+				localStorage.setItem("cameras", JSON.stringify(filterCameraBrandsArr));
 			}
+			// console.log(filterCameraBrandsArr);
 
-			const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
+			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 			addCameras(filteredArray);
 		});
 	});
@@ -155,7 +178,7 @@ function renderCameras(cameras) {
 	}
 	SORT.addEventListener("change", function () {
 		sortType = this.value;
-		const filteredArray = filtered(cameras, searchQuery, sortType, filterCameraArr);
+		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
 		addCameras(filteredArray);
 		localStorage.setItem("sort", sortType);
@@ -175,7 +198,7 @@ function addCameras(cameras) {
 	if (cameras.length === 0) {
 		html = '<div class="alert alert-warning" role="alert">There are no products</div>';
 	}
-	PRODUCTS.innerHTML = html;
+	products.innerHTML = html;
 }
 
 function makeCamera(camera) {
@@ -213,32 +236,52 @@ function makeListItem(item, className) {
  * @param {string} searchQuery
  * @returns
  */
-function filtered(data, searchQuery, sortQuery, cameraArr) {
+function filtered(data, searchQuery, sortQuery, cameraArr, currentPage) {
 	let filtered = data.filter((e) => e.name.toLowerCase().includes(searchQuery));
 	filtered = sorting(filtered, sortQuery);
 
+	// console.log("Treba da ispise trenutno stranicu pod rednim brojem " + currentPage);
+
+
+
+	//If brands array has no length 0, then enter in if adn go through all filtered(cameras) which brandId is = with  numberId in array... 
 	if (cameraArr.length !== 0) {
 		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
 	}
+	if (cameraArr.length === 0 && searchQuery == "") {
+		filtered = changePage(currentPage, filtered);
+	}
+	//Ako sam na drugoj ili trecoj pretraga ne radi - Trebalo bi da je sredjeno
+	//Ako sortiram, on pregazi stranicu i dohvata sve iz camerasData, pa ga sortira po tom principu
 	return filtered;
 }
 
+/**
+ * 
+ * @returns Number of page on site.
+ */
 function numPages(objJSON) {
 	return Math.ceil(objJSON.length / RECORDS_PER_PAGE);
 }
-function changePage(pageNum) {
-	console.log("Promena stranice " + pageNum);
+function changePage(pageNum, camerasData) {
+	// console.log(camerasData);
+	// console.log("Promena stranice " + pageNum);
 
-	let html = "";
-	console.log(pageNum);
-	for (var i = (pageNum - 1) * RECORDS_PER_PAGE; i < pageNum * RECORDS_PER_PAGE; i++) {
-		if (allCameras[i] === undefined) {
+	let productsOnPage = [];
+
+	/*Formula za for je sledeca
+		i = 2 * 10 = 20
+		meni ne postoji camerasData[20] i zato on vraca undefined, 
+		meni treba da ovo i bude 0 i da krene od 0 elemtna
+	*/
+	for (let i = (pageNum - 1) * RECORDS_PER_PAGE; i < pageNum * RECORDS_PER_PAGE; i++) {
+		if (camerasData[i] === undefined) {
 			break;
 		}
-		html += makeCamera(allCameras[i]);
+		productsOnPage.push(camerasData[i]);
 	}
-	PRODUCTS.innerHTML = html;
-	console.log(html);
+	// console.log(productsOnPage);
+	return productsOnPage;
 }
 function addPageNumber(pages) {
 	const PAGINATION = document.querySelector("#pagination");
@@ -250,5 +293,9 @@ function addPageNumber(pages) {
 
 	PAGINATION.innerHTML = html;
 }
-
 //Paginacija radi, samo namestiti da posle filtriranja ostane ta strana...
+
+//With this function, I'll open a cartModal, or menuModal
+function toggleModal() {
+	modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-90%)" : modal.style.transform = "translateX(0%)";
+}

@@ -17,6 +17,7 @@
 	</head>
 	<body class="overflow-hidden">
 		<div id="loading" class="loader"></div>
+		<div id="modal" class="modal bg-white d-block shadow"></div>
 		<div class="container-fluid">
 			<!-- Header -->
 			<section class="header-bg position-relative">
@@ -55,7 +56,7 @@
 							<!-- 1st by brand name  -->
 							<!-- 2nd by type of camera -->
 
-							<div id="brands-container">
+							<div id="brands-container" class="brands-container border rounded shadow">
 								<h3 class="border-bottom p-3">Brands</h3>
 								<div id="brands">
 									<ul>
@@ -65,16 +66,6 @@
 										</li>
 									</ul>
 								</div>
-							</div>
-
-							<div id="types" class="types">
-								<h3 class="border-bottom p-3">Types</h3>
-								<ul>
-									<li class="form-check d-flex align-items-center">
-										<input type="checkbox" id="1" class="brand" />
-										<label class="ms-2">DSLR</label>
-									</li>
-								</ul>
 							</div>
 						</div>
 						<!-- Products container -->
