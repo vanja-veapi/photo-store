@@ -1,3 +1,8 @@
+/**
+ * 1. Na index.htmlu kad se dodje skroluje, ne gubi se nav bg
+ * 2. Treba da se nav ispisuje dinamicki 
+ */
+
 const BASE_URL = "assets/data";
 
 const header = document.querySelector("header");
@@ -20,6 +25,8 @@ let brandsArr = []; // BrandsArr take all brands and put in this array, for glob
 let searchQuery = "";
 let sortType = localStorage.getItem("sort");
 let filterCameraBrandsArr = JSON.parse(localStorage.getItem("cameras")) === null ? [] : JSON.parse(localStorage.getItem("cameras"));
+let cartCount = localStorage.getItem("cart-counter") === null ? 0 : localStorage.getItem("cart-counter");
+let isCartOpen = false;
 
 const RECORDS_PER_PAGE = 10;
 let currentPage = 1;
@@ -37,9 +44,10 @@ window.addEventListener("load", function () {
 		fetchData(BASE_URL + "/brands.json", renderBrands);
 	}
 
-	modal.style.transform = "translateX(0%)"
+	modal.style.transform = "translateX(0%)";
 	cart.addEventListener("click", toggleCart);
 	hamburger.addEventListener("click", toggleMenu);
+	itemsInCart.innerHTML = cartCount;
 
 });
 
@@ -47,7 +55,7 @@ window.addEventListener("scroll", function () {
 	if (this.scrollY >= 50) {
 		header.classList.add("bg-dark", "size");
 		modal.style.top = "80px";
-	} else if (this.scrollY <= 50 && mobileMenu.classList.contains('d-none')) {
+	} else if (this.scrollY <= 50 && mobileMenu?.classList.contains('d-none')) {
 		header.classList.remove("bg-dark");
 		modal.style.removeProperty("top");
 	}
@@ -217,7 +225,7 @@ function addCameras(cameras) {
 	//Ako mi se budu pravili neki infiniti loopovi moguce da je ovde problem
 	const productCards = document.querySelectorAll(".product-cards");
 	productCards.forEach(card => {
-		card.addEventListener("click", findCamera);
+		card.addEventListener("click", toggleProductModal);
 	})
 
 	closeModal.addEventListener("click", function () {
@@ -318,7 +326,37 @@ function addPageNumber(pages) {
 //Paginacija radi, samo namestiti da posle filtriranja ostane ta strana...
 
 function toggleCart() {
-	return modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-90%)" : modal.style.transform = "translateX(0%)";
+	let cart = JSON.parse(localStorage.getItem("cart"));
+	const productCart = document.querySelector("#product-cart");
+
+	if (!isCartOpen) {
+		if (cart?.products.length === 0 || cart === null) {
+			console.log("Nema proizvoda");
+		} else {
+			let res = [];
+			let quantityArr = [];
+			let html = "";
+			res = allCameras.filter(camera => cart.products.find(element => {
+
+				if (camera.id === element.id) {
+					return quantityArr.push(element.quantity)
+					// console.log({ ...camera, kolikinaBrapoMoj: element.quantity });
+					// return res = { ...camera, aaaaaaaasasasssssddddddddd: element.quantity };
+
+				}
+			}));
+			res.forEach((item, index) => {
+				console.log(html);
+				html += makeCartItem({ ...item, quantity: quantityArr[index] });
+			})
+
+			productCart.innerHTML = html;
+		}
+	}
+	calculateTotalCash();
+
+	isCartOpen = !isCartOpen;
+	return modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-100%)" : modal.style.transform = "translateX(0%)";
 }
 
 function toggleMenu() {
@@ -333,10 +371,13 @@ function toggleMenu() {
 
 	mobileMenu.classList.toggle("d-none");
 }
-function findCamera() {
+function toggleProductModal() {
 	const cameraId = Number(this.dataset.id);
-	const camera = allCameras.find(cam => cam.id === cameraId);
+	const camera = findCamera(cameraId);
 	showCamera(camera);
+}
+function findCamera(cameraId) {
+	return allCameras.find(cam => cam.id === cameraId);
 }
 function showCamera(model) {
 	productModal.classList.add("show");
@@ -360,15 +401,108 @@ function showCamera(model) {
 		</div>
 	</div>`;
 
-	const addButton = document.querySelector("#add-to-cart");
-	addButton.addEventListener("click", function () {
+	const addCartButton = document.querySelector("#add-to-cart");
+	addCartButton.addEventListener("click", function () {
 		let itemsCart = Number(itemsInCart.innerText);
-		itemsInCart.innerText = itemsCart += 1;
+		console.log(itemsInCart);
+		let cart = null;
 
+		if (JSON.parse(localStorage.getItem("cart")) !== null) {
+			cart = JSON.parse(localStorage.getItem("cart"));
+			let proba = cart.products.find(item => item.id === model.id);
+			if (proba === undefined) {
+				itemsInCart.innerHTML = itemsCart += 1;
+			}
+		} else {
+			itemsInCart.innerHTML = itemsCart += 1;
+		}
+
+		localStorage.setItem("cart-counter", itemsInCart.innerHTML)
 		addToCart(model.id)
 	});
 
 }
+function addToCart(modelId) {
+	let order = JSON.parse(localStorage.getItem("cart"));
+
+	function fetchCart(porudzbina, id) {
+		return porudzbina.products.find(e => e.id === id)
+	}
+
+	if (!order) {
+		order = {
+			products: []
+		}
+	}
+
+	const article = fetchCart(order, modelId);
+
+
+	if (article) {
+		console.log("Postoji");
+		article.quantity += 1;
+	} else {
+		console.log("Ne postoji")
+		order.products.push({
+			id: modelId,
+			quantity: 1
+		})
+	}
+
+	return localStorage.setItem("cart", JSON.stringify(order));
+}
+
+function renderCart(articles) {
+	if (articles.length === 0) {
+
+	}
+}
+
+/**
+ * function toggleProductModal() {
+	const cameraId = Number(this.dataset.id);
+	const camera = toggleProductModal(cameraId)
+	showCamera(camera);
+}
+function toggleProductModal(cameraId) {
+	return allCameras.find(cam => cam.id === cameraId);
+}
+
 function addToCart(id) {
 	return
+}
+function setItemToLS(naziv, porudzbine) {
+	return localStorage.setItem(naziv, JSON.stringify(porudzbine));
+}
+function getItemFromLS(name) {
+	return JSON.parse(localStorage.getItem(name));
+}
+ */
+
+function makeCartItem(item) {
+	console.log(item);
+	return `<div class="col-4 p-3">
+	<img src="assets/images/products/${item.img.src}" alt="${item.img.alt}" class="img-fluid" />
+		</div>
+		<div class="col-8">
+			<div class="d-flex">
+				<p class="me-3">Model:</p>
+				<p>${item.name}</p>
+			</div>
+			<div class="d-flex">
+				<p class="me-3">Price:</p>
+				<p class="total">${item.price.current * item.quantity}</p>
+			</div>
+			<div class="d-flex">
+				<p class="me-3">Quantity:</p>
+				<input type="number" id="quantity" class="w-25 form-control" value="${item.quantity}" />
+			</div>
+		</div>`
+}
+function calculateTotalCash() {
+	const total = document.querySelectorAll(".total");
+	const sumId = document.querySelector("#sum");
+	let sum = 0;
+	total.forEach(price => sum += Number(price.innerText))
+	sumId.innerHTML = sum;
 }

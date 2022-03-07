@@ -1,310 +1,310 @@
 [
-    {
-        "id": 1,
-        "name": "Nikon D3300",
-        "img": {
-            "src": "nikon-d3300.jpg",
-            "alt": "Nikdon D3300"
-        },
-        "price": {
-            "current": 550.55,
-            "old": 1700
-        },
-        "description": "If you want to enjoy in sharp and fast photography for this budget you can make extra pictures",
-        "brandId": 1
-    },
-    {
-        "id": 2,
-        "name": "Nikon D3500",
-        "img": {
-            "src": "Nikon-D3500.jpg",
-            "alt": "Nikon D3500"
-        },
-        "price": {
-            "current": 800.55,
-            "old": null
-        },
-        "description": "If you want to enjoy in sharp and fast photography for this budget you can make extra pictures",
-        "brandId": 1
-    },
-    {
-        "id": 3,
-        "name": "Canon EOS 7D",
-        "img": {
-            "src": "Canon-EOS-7D-18-135-IS.jpg",
-            "alt": "Canon EOS 7D"
-        },
-        "price": {
-            "current": 750.00,
-            "old": 1299.99
-        },
-        "description": "If you want to enjoy in sharp and fast photography for this budget you can make extra pictures",
-        "brandId": 2
-    },
-    {
-        "id": 4,
-        "name": "Canon EOS 90D",
-        "img": {
-            "src": "canon-eos-9d.jpg",
-            "alt": "Canon EOS 90D"
-        },
-        "price": {
-            "current": 350.00,
-            "old": 999.99
-        },
-        "description": "The 90D is available in several kits. The body alone is priced at $1199. When bundled with the EF-S 18-55mm F3. 5-5.6 IS STM lens the price is $1349, while the kit with the more versatile EF-S 18-135mm F3.",
-        "brandId": 2
-    },
-    {
-        "id": 5,
-        "name": "Canon EOS 850D",
-        "img": {
-            "src": "canon-eos-9d.jpg",
-            "alt": "Canon EOS 850"
-        },
-        "price": {
-            "current": 2550.00,
-            "old": null
-        },
-        "description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
-        "brandId": 2
-    },
-    {
-        "id": 6,
-        "name": "Nikon D5600",
-        "img": {
-            "src": "nikon-d5600.jpg",
-            "alt": "Nikon D5600"
-        },
-        "price": {
-            "current": 1100,
-            "old": null
-        },
-        "description": "Nikon D5600 DSLR Camera Kit with 18-55mm VR + 70-300mm Zoom Lenses | Built-in Wi-Fi | 24.2 MP CMOS Sensor | EXPEED 4 Image Processor and Full HD 1080p | SnapBridge Bluetooth Connectivity",
-        "brandId": 1
-    },
-    {
-        "id": 7,
-        "name": "Sony A6000",
-        "img": {
-            "src": "sony-a6000.jpg",
-            "alt": "Sony A6000"
-        },
-        "price": {
-            "current": 800,
-            "old": null
-        },
-        "description": "Sony Alpha a6000 Mirrorless Digitial Camera 24.3MP SLR Camera with 3.0-Inch LCD (Black) w/ 16-50mm Power Zoom Lens (Renewed) .",
-        "brandId": 4
-    },
-    {
-        "id": 8,
-        "name": "Sony A6400",
-        "img": {
-            "src": "sony-a6400.jpg",
-            "alt": "Sony A6400"
-        },
-        "price": {
-            "current": 800,
-            "old": null
-        },
-        "description": "Sony Alpha a6400 Mirrorless Digitial Camera 24.3MP SLR Camera with 3.0-Inch LCD (Black) w/ 16-50mm Power Zoom Lens (Renewed) .",
-        "brandId": 4
-    },
-    {
-        "id": 9,
-        "name": "Pentax K-1",
-        "img": {
-            "src": "pentax-k1.jpg",
-            "alt": "Pentax K-1"
-        },
-        "price": {
-            "current": 1389,
-            "old": null
-        },
-        "description": "Pentax K-1 Mark II w/ D-FA 28-105 WR Lens: 36.4MP Full Frame High Resolution Digital Camera 5 Axis, 5 Steps Shake Reduction II Weather-resistant Construction Dustproof Flexible Tilt-Type LCD Monitor ",
-        "brandId": 6
-    },
-    {
-        "id": 10,
-        "name": "Sony Alpha A7",
-        "img": {
-            "src": "sony-a7.jpg",
-            "alt": "Sony A7"
-        },
-        "price": {
-            "current": 500,
-            "old": 1000
-        },
-        "description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
-        "brandId": 4
-    },
-    {
-        "id": 11,
-        "name": "Nikon D750",
-        "img": {
-            "src": "nikon-d750.jpg",
-            "alt": "Nikon D750"
-        },
-        "price": {
-            "current": 1230,
-            "old": null
-        },
-        "description": "Fast live-view focusing.",
-        "brandId": 1
-    },
-    {
-        "id": 12,
-        "name": "Nikon D780",
-        "img": {
-            "src": "nikon-d780.jpg",
-            "alt": "Nikon D780"
-        },
-        "price": {
-            "current": 1600,
-            "old": 2000
-        },
-        "description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
-        "brandId": 1
-    },
-    {
-        "id": 13,
-        "name": "Nikon D6",
-        "img": {
-            "src": "Nikon-D6.jpg",
-            "alt": "Nikon D6"
-        },
-        "price": {
-            "current": 8600,
-            "old": null
-        },
-        "description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
-        "brandId": 1
-    },
-    {
-        "id": 14,
-        "name": "Sony A99",
-        "img": {
-            "src": "Sony-A99-II.jpg",
-            "alt": "Sony A99"
-        },
-        "price": {
-            "current": 730,
-            "old": 1000
-        },
-        "description": "On its tenth anniversary, the Sony A-mount full-frame DSLR series underwent resuscitation in such a way that the celebrated Sony A99 received a successor. The Sony A99 II has taken over the 42.4MP Ekmor R BSI CMOS sensor from the Sony A7R II (also without a low-pass optical filter), but boasts a new front-end LSI processor (which works in conjunction with BIONZ Ks) that enables this DSLR -in the camera to monitor the speed sensor (burst is 12 fps with AF / AE tracking). The A99 II is Sony's first full-format DSLR to feature the proven 4D Focus system, which features a combination of 79-point AF sensors and a 399-point focus plane with detection phase, resulting in a 79-point hybrid AF system with phase detection (Hybrid Phase Detection AF) (of which 15 cross). Focus works perfectly even in low light, up to -4 EV.",
-        "brandId": 4
-    },
-    {
-        "id": 15,
-        "name": "Nikon Z50",
-        "img": {
-            "src": "Nikon-z50.jpg",
-            "alt": "Nikon Z50"
-        },
-        "price": {
-            "current": 500,
-            "old": null
-        },
-        "description": "Nikon Z50. Model made special for cinematography.",
-        "brandId": 1
-    },
-    {
-        "id": 16,
-        "name": "Fujifilm XS-1",
-        "img": {
-            "src": "fuji-xs1.jpg",
-            "alt": "Fujifilm XS-1"
-        },
-        "price": {
-            "current": 800,
-            "old": null
-        },
-        "description": null,
-        "brandId": 3
-    },
-    {
-        "id": 17,
-        "name": "Canon EOS 4000D",
-        "img": {
-            "src": "Canon-EOS-4000D-18-55-III.jpg",
-            "alt": "Canon EOS 4000D 18-55 III"
-        },
-        "price": {
-            "current": 450,
-            "old": null
-        },
-        "description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
-        "brandId": 2
-    },
-    {
-        "id": 18,
-        "name": "Canon EOS 250D",
-        "img": {
-            "src": "Canon-EOS-250D-18-55-IS-STM.jpg",
-            "alt": "Canon EOS 250D"
-        },
-        "price": {
-            "current": 600,
-            "old": null
-        },
-        "description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
-        "brandId": 2
-    },
-    {
-        "id": 19,
-        "name": "Pentax 645Z",
-        "img": {
-            "src": "Pentax-645Z.jpg",
-            "alt": "Pentax 645Z"
-        },
-        "price": {
-            "current": 1800,
-            "old": null
-        },
-        "description": null,
-        "brandId": 6
-    },
-    {
-        "id": 20,
-        "name": "Sony A77",
-        "img": {
-            "src": "sony-a77.jpg",
-            "alt": "Sony A77"
-        },
-        "price": {
-            "current": 1900,
-            "old": 2200
-        },
-        "description": null,
-        "brandId": 4
-    },
-    {
-        "id": 21,
-        "name": "Sony A68",
-        "img": {
-            "src": "Sony-A68.jpg",
-            "alt": "Sony A68"
-        },
-        "price": {
-            "current": 1400,
-            "old": 1440
-        },
-        "description": null,
-        "brandId": 4
-    },
-    {
-        "id": 22,
-        "name": "Sony A99",
-        "img": {
-            "src": "Sony-A99.jpg",
-            "alt": "Sony A99"
-        },
-        "price": {
-            "current": 2000,
-            "old": null
-        },
-        "description": null,
-        "brandId": 4
-    }
+	{
+		"id": 1,
+		"name": "Nikon D3300",
+		"img": {
+			"src": "nikon-d3300.jpg",
+			"alt": "Nikdon D3300"
+		},
+		"price": {
+			"current": 550.55,
+			"old": 1700
+		},
+		"description": "If you want to enjoy in sharp and fast photography for this budget you can make extra pictures",
+		"brandId": 1
+	},
+	{
+		"id": 2,
+		"name": "Nikon D3500",
+		"img": {
+			"src": "Nikon-D3500.jpg",
+			"alt": "Nikon D3500"
+		},
+		"price": {
+			"current": 800.55,
+			"old": null
+		},
+		"description": "If you want to enjoy in sharp and fast photography for this budget you can make extra pictures",
+		"brandId": 1
+	},
+	{
+		"id": 3,
+		"name": "Canon EOS 7D",
+		"img": {
+			"src": "Canon-EOS-7D-18-135-IS.jpg",
+			"alt": "Canon EOS 7D"
+		},
+		"price": {
+			"current": 750.0,
+			"old": 1299.99
+		},
+		"description": "If you want to enjoy in sharp and fast photography for this budget you can make extra pictures",
+		"brandId": 2
+	},
+	{
+		"id": 4,
+		"name": "Canon EOS 90D",
+		"img": {
+			"src": "canon-eos-9d.jpg",
+			"alt": "Canon EOS 90D"
+		},
+		"price": {
+			"current": 350.0,
+			"old": 999.99
+		},
+		"description": "The 90D is available in several kits. The body alone is priced at $1199. When bundled with the EF-S 18-55mm F3. 5-5.6 IS STM lens the price is $1349, while the kit with the more versatile EF-S 18-135mm F3.",
+		"brandId": 2
+	},
+	{
+		"id": 5,
+		"name": "Canon EOS 850D",
+		"img": {
+			"src": "canon-eos-9d.jpg",
+			"alt": "Canon EOS 850"
+		},
+		"price": {
+			"current": 2550.0,
+			"old": null
+		},
+		"description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
+		"brandId": 2
+	},
+	{
+		"id": 6,
+		"name": "Nikon D5600",
+		"img": {
+			"src": "nikon-d5600.jpg",
+			"alt": "Nikon D5600"
+		},
+		"price": {
+			"current": 1100,
+			"old": null
+		},
+		"description": "Nikon D5600 DSLR Camera Kit with 18-55mm VR + 70-300mm Zoom Lenses | Built-in Wi-Fi | 24.2 MP CMOS Sensor | EXPEED 4 Image Processor and Full HD 1080p | SnapBridge Bluetooth Connectivity",
+		"brandId": 1
+	},
+	{
+		"id": 7,
+		"name": "Sony A6000",
+		"img": {
+			"src": "sony-a6000.jpg",
+			"alt": "Sony A6000"
+		},
+		"price": {
+			"current": 800,
+			"old": null
+		},
+		"description": "Sony Alpha a6000 Mirrorless Digitial Camera 24.3MP SLR Camera with 3.0-Inch LCD (Black) w/ 16-50mm Power Zoom Lens (Renewed) .",
+		"brandId": 4
+	},
+	{
+		"id": 8,
+		"name": "Sony A6400",
+		"img": {
+			"src": "sony-a6400.jpg",
+			"alt": "Sony A6400"
+		},
+		"price": {
+			"current": 800,
+			"old": null
+		},
+		"description": "Sony Alpha a6400 Mirrorless Digitial Camera 24.3MP SLR Camera with 3.0-Inch LCD (Black) w/ 16-50mm Power Zoom Lens (Renewed) .",
+		"brandId": 4
+	},
+	{
+		"id": 9,
+		"name": "Pentax K-1",
+		"img": {
+			"src": "pentax-k1.jpg",
+			"alt": "Pentax K-1"
+		},
+		"price": {
+			"current": 1389,
+			"old": null
+		},
+		"description": "Pentax K-1 Mark II w/ D-FA 28-105 WR Lens: 36.4MP Full Frame High Resolution Digital Camera 5 Axis, 5 Steps Shake Reduction II Weather-resistant Construction Dustproof Flexible Tilt-Type LCD Monitor ",
+		"brandId": 6
+	},
+	{
+		"id": 10,
+		"name": "Sony Alpha A7",
+		"img": {
+			"src": "sony-a7.jpg",
+			"alt": "Sony A7"
+		},
+		"price": {
+			"current": 500,
+			"old": 1000
+		},
+		"description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
+		"brandId": 4
+	},
+	{
+		"id": 11,
+		"name": "Nikon D750",
+		"img": {
+			"src": "nikon-d750.jpg",
+			"alt": "Nikon D750"
+		},
+		"price": {
+			"current": 1230,
+			"old": null
+		},
+		"description": "Fast live-view focusing.",
+		"brandId": 1
+	},
+	{
+		"id": 12,
+		"name": "Nikon D780",
+		"img": {
+			"src": "nikon-d780.jpg",
+			"alt": "Nikon D780"
+		},
+		"price": {
+			"current": 1600,
+			"old": 2000
+		},
+		"description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
+		"brandId": 1
+	},
+	{
+		"id": 13,
+		"name": "Nikon D6",
+		"img": {
+			"src": "Nikon-D6.jpg",
+			"alt": "Nikon D6"
+		},
+		"price": {
+			"current": 8600,
+			"old": null
+		},
+		"description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
+		"brandId": 1
+	},
+	{
+		"id": 14,
+		"name": "Sony A99",
+		"img": {
+			"src": "Sony-A99-II.jpg",
+			"alt": "Sony A99"
+		},
+		"price": {
+			"current": 730,
+			"old": 1000
+		},
+		"description": "On its tenth anniversary, the Sony A-mount full-frame DSLR series underwent resuscitation in such a way that the celebrated Sony A99 received a successor. The Sony A99 II has taken over the 42.4MP Ekmor R BSI CMOS sensor from the Sony A7R II (also without a low-pass optical filter), but boasts a new front-end LSI processor (which works in conjunction with BIONZ Ks) that enables this DSLR -in the camera to monitor the speed sensor (burst is 12 fps with AF / AE tracking). The A99 II is Sony's first full-format DSLR to feature the proven 4D Focus system, which features a combination of 79-point AF sensors and a 399-point focus plane with detection phase, resulting in a 79-point hybrid AF system with phase detection (Hybrid Phase Detection AF) (of which 15 cross). Focus works perfectly even in low light, up to -4 EV.",
+		"brandId": 4
+	},
+	{
+		"id": 15,
+		"name": "Nikon Z50",
+		"img": {
+			"src": "Nikon-z50.jpg",
+			"alt": "Nikon Z50"
+		},
+		"price": {
+			"current": 500,
+			"old": null
+		},
+		"description": "Nikon Z50. Model made special for cinematography.",
+		"brandId": 1
+	},
+	{
+		"id": 16,
+		"name": "Fujifilm XS-1",
+		"img": {
+			"src": "fuji-xs1.jpg",
+			"alt": "Fujifilm XS-1"
+		},
+		"price": {
+			"current": 800,
+			"old": null
+		},
+		"description": null,
+		"brandId": 3
+	},
+	{
+		"id": 17,
+		"name": "Canon EOS 4000D",
+		"img": {
+			"src": "Canon-EOS-4000D-18-55-III.jpg",
+			"alt": "Canon EOS 4000D 18-55 III"
+		},
+		"price": {
+			"current": 450,
+			"old": null
+		},
+		"description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
+		"brandId": 2
+	},
+	{
+		"id": 18,
+		"name": "Canon EOS 250D",
+		"img": {
+			"src": "Canon-EOS-250D-18-55-IS-STM.jpg",
+			"alt": "Canon EOS 250D"
+		},
+		"price": {
+			"current": 600,
+			"old": null
+		},
+		"description": "Optical Viewfinder with a 45-point All Cross-type AF System* with Face Detection.",
+		"brandId": 2
+	},
+	{
+		"id": 19,
+		"name": "Pentax 645Z",
+		"img": {
+			"src": "Pentax-645Z.jpg",
+			"alt": "Pentax 645Z"
+		},
+		"price": {
+			"current": 1800,
+			"old": null
+		},
+		"description": null,
+		"brandId": 6
+	},
+	{
+		"id": 20,
+		"name": "Sony A77",
+		"img": {
+			"src": "sony-a77.jpg",
+			"alt": "Sony A77"
+		},
+		"price": {
+			"current": 1900,
+			"old": 2200
+		},
+		"description": null,
+		"brandId": 4
+	},
+	{
+		"id": 21,
+		"name": "Sony A68",
+		"img": {
+			"src": "Sony-A68.jpg",
+			"alt": "Sony A68"
+		},
+		"price": {
+			"current": 1400,
+			"old": 1440
+		},
+		"description": null,
+		"brandId": 4
+	},
+	{
+		"id": 22,
+		"name": "Sony Agg",
+		"img": {
+			"src": "Sony-A99.jpg",
+			"alt": "Sony A99"
+		},
+		"price": {
+			"current": 2000,
+			"old": null
+		},
+		"description": null,
+		"brandId": 4
+	}
 ]
