@@ -4,8 +4,15 @@ const header = document.querySelector("header");
 const products = document.querySelector("#products");
 const search = document.querySelector("#search");
 const cart = document.querySelector("#cart");
+const hamburger = document.querySelector("#hamburger");
 const modal = document.querySelector("#modal");
 const scrollY = window.scrollY;
+
+const mobileMenu = document.querySelector("#mobile-menu");
+const productModal = document.querySelector("#product-modal");
+const closeModal = document.querySelector("#close-modal");
+
+const itemsInCart = document.querySelector("#items-in-cart");
 
 let allCameras = []; // allCameras take all cameras and put in this array, for global purpose.
 let brandsArr = []; // BrandsArr take all brands and put in this array, for global purpose.
@@ -31,16 +38,22 @@ window.addEventListener("load", function () {
 	}
 
 	modal.style.transform = "translateX(0%)"
-	cart.addEventListener("click", toggleModal);
+	cart.addEventListener("click", toggleCart);
+	hamburger.addEventListener("click", toggleMenu);
+
 });
 
 window.addEventListener("scroll", function () {
 	if (this.scrollY >= 50) {
 		header.classList.add("bg-dark", "size");
 		modal.style.top = "80px";
-	} else {
-		header.classList.remove("bg-dark", "size");
+	} else if (this.scrollY <= 50 && mobileMenu.classList.contains('d-none')) {
+		header.classList.remove("bg-dark");
 		modal.style.removeProperty("top");
+	}
+
+	if (this.scrollY <= 50) {
+		header.classList.remove("size")
 	}
 });
 
@@ -138,8 +151,8 @@ function renderCameras(cameras) {
 		})
 	);
 
-	const BRANDS = document.querySelectorAll(".brand");
-	const SORT = document.querySelector("#sort");
+	const brands = document.querySelectorAll(".brand");
+	const sort = document.querySelector("#sort");
 
 	//Search cameras in input field
 	search.addEventListener("input", function (e) {
@@ -150,7 +163,7 @@ function renderCameras(cameras) {
 	});
 
 	// Brands checkboxes
-	BRANDS.forEach((brand) => {
+	brands.forEach((brand) => {
 		if (filterCameraBrandsArr.some((id) => id === Number(brand.value))) {
 			brand.checked = true;
 		}
@@ -171,18 +184,19 @@ function renderCameras(cameras) {
 	});
 
 	//Cameras Sort
-	for (let i = 0; i < SORT.length; i++) {
-		if (SORT[i].value === localStorage.getItem("sort")) {
-			SORT[i].selected = true;
+	for (let i = 0; i < sort.length; i++) {
+		if (sort[i].value === localStorage.getItem("sort")) {
+			sort[i].selected = true;
 		}
 	}
-	SORT.addEventListener("change", function () {
+	sort.addEventListener("change", function () {
 		sortType = this.value;
 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
 		addCameras(filteredArray);
 		localStorage.setItem("sort", sortType);
 	});
+
 }
 
 function addCameras(cameras) {
@@ -199,12 +213,23 @@ function addCameras(cameras) {
 		html = '<div class="alert alert-warning" role="alert">There are no products</div>';
 	}
 	products.innerHTML = html;
+
+	//Ako mi se budu pravili neki infiniti loopovi moguce da je ovde problem
+	const productCards = document.querySelectorAll(".product-cards");
+	productCards.forEach(card => {
+		card.addEventListener("click", findCamera);
+	})
+
+	closeModal.addEventListener("click", function () {
+		productModal.classList.toggle("show");
+		productModal.style.display = "none";
+	});
 }
 
 function makeCamera(camera) {
 	let cameraBrand = brandsArr.find((brand) => brand.id === camera.brandId).name;
 
-	return `<div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
+	return `<div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3 product-cards" data-id="${camera.id}">
 	<div class="card text-center position-relative">
 		<div class="d-flex justify-content-center align-items-center">
 			<img src="assets/images/products/${camera.img.src}" alt="${camera.img.alt}" width="250" class="img-fluid"/>
@@ -264,9 +289,6 @@ function numPages(objJSON) {
 	return Math.ceil(objJSON.length / RECORDS_PER_PAGE);
 }
 function changePage(pageNum, camerasData) {
-	// console.log(camerasData);
-	// console.log("Promena stranice " + pageNum);
-
 	let productsOnPage = [];
 
 	/*Formula za for je sledeca
@@ -284,18 +306,69 @@ function changePage(pageNum, camerasData) {
 	return productsOnPage;
 }
 function addPageNumber(pages) {
-	const PAGINATION = document.querySelector("#pagination");
+	const pagination = document.querySelector("#pagination");
 
 	let html = "";
 	for (let i = 0; i < pages; i++) {
 		html += `<li class="list-group-item border pages" data-id="${i + 1}"><a href="#" class="text-dark" data-id="${i + 1}">${i + 1}</a></li>`;
 	}
 
-	PAGINATION.innerHTML = html;
+	pagination.innerHTML = html;
 }
 //Paginacija radi, samo namestiti da posle filtriranja ostane ta strana...
 
-//With this function, I'll open a cartModal, or menuModal
-function toggleModal() {
-	modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-90%)" : modal.style.transform = "translateX(0%)";
+function toggleCart() {
+	return modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-90%)" : modal.style.transform = "translateX(0%)";
+}
+
+function toggleMenu() {
+	mobileMenu.classList.toggle("top-100");
+	if (window.scrollY <= 50) {
+		header.classList.toggle("bg-dark")
+	}
+
+	if (mobileMenu.classList[6] === "d-none") {
+		return mobileMenu.classList.toggle("d-none")
+	}
+
+	mobileMenu.classList.toggle("d-none");
+}
+function findCamera() {
+	const cameraId = Number(this.dataset.id);
+	const camera = allCameras.find(cam => cam.id === cameraId);
+	showCamera(camera);
+}
+function showCamera(model) {
+	productModal.classList.add("show");
+	productModal.style.display = "block";
+
+	const productContent = document.querySelector("#product-content");
+	productContent.innerHTML = `<div class='container'>
+		<div class='row'>
+			<div class='col-md-12 col-lg-4'>
+				<img src="assets/images/products/${model.img.src}" alt="${model.img.alt}" class="img-fluid"/>
+			</div>
+			<div class='col-md-12 col-lg-8'>
+				<p>${model.name}</p>
+				<div class="d-flex">
+					<p class="h2">${model.price.current}</p>
+					${model.price.old === null ? "" : `<small class="ms-2"><s>${model.price.old}</s></small>`}
+				</div>
+				<p>${model.description === null ? "Product has no description." : model.description}</p>
+				<button id="add-to-cart" class="btn btn-primary mt-5" data-id=${model.id}>Add to cart</button>
+			</div>
+		</div>
+	</div>`;
+
+	const addButton = document.querySelector("#add-to-cart");
+	addButton.addEventListener("click", function () {
+		let itemsCart = Number(itemsInCart.innerText);
+		itemsInCart.innerText = itemsCart += 1;
+
+		addToCart(model.id)
+	});
+
+}
+function addToCart(id) {
+	return
 }
