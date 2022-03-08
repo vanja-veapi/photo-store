@@ -4,11 +4,10 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="keywords" content="Photo store, dslr, mirroless, canon, nikon, fuji" />
 		<meta name="description" content="The biggest choice cameras in the region. The best and quality equpiment only in our store. Everyday discount." />
 		<meta name="author" content="Vanja Veapi" />
-		<title>Photo Store | Home</title>
+		<title>Photo Store | Shop</title>
 		<!-- FaFa -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 		<!-- Bootstrap -->
@@ -18,7 +17,6 @@
 	</head>
 	<body class="overflow-hidden">
 		<div id="loading" class="loader"></div>
-
 		<div id="modal" class="modal bg-white d-block shadow">
 			<div class="container-fluid mt-5">
 				<div id="product-cart" class="row border-bottom mb-3 ms-1">
@@ -47,7 +45,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="container-fluid">
 			<!-- Header -->
 			<section class="header-bg position-relative">
@@ -55,9 +52,9 @@
 					<a href="index.html"><img src="assets/images/logo-cart-1.png" alt="Logo" class="img-fluid logo ms-4" /></a>
 					<nav class="me-4 navbar-dark">
 						<ul class="d-flex align-items-center">
-							<li class="list-group-item d-none d-sm-none d-md-block"><a href="#" class="active">Home</a></li>
+							<li class="list-group-item d-none d-sm-none d-md-block"><a href="index.html">Home</a></li>
 							<li class="list-group-item d-none d-sm-none d-md-block"><a href="shop.html">Shop</a></li>
-							<li class="list-group-item d-none d-sm-none d-md-block"><a href="contact.html">Contact</a></li>
+							<li class="list-group-item d-none d-sm-none d-md-block"><a href="#" class="active">Contact</a></li>
 							<li id="hamburger" class="list-group-item d-block d-md-none text-white">
 								<button class="navbar-toggler">
 									<span class="navbar-toggler-icon"></span>
@@ -69,13 +66,15 @@
 							</li>
 						</ul>
 					</nav>
+					<!-- KOPIRATI OVAJ DEO U INDEX -->
 					<nav id="mobile-menu" class="header w-100 d-block d-md-none position-absolute position-relative d-none">
 						<ul class="w-100 d-flex align-items-center flex-column bg-dark">
-							<li class="list-group-item d-block d-md-none"><a href="index.html" class="active">Home</a></li>
-							<li class="list-group-item d-block d-md-none"><a href="shop.html">Shop</a></li>
-							<li class="list-group-item d-block d-md-none"><a href="contact.html">Contact</a></li>
+							<li class="list-group-item d-block d-md-none"><a href="index.html">Home</a></li>
+							<li class="list-group-item d-block d-md-none"><a href="shop.html" class="active">Shop</a></li>
+							<li class="list-group-item d-block d-md-none"><a href="#" class="active">Contact</a></li>
 						</ul>
 					</nav>
+					<!-- DO OVDE  -->
 				</header>
 				<div class="container title d-flex justify-content-center align-items-center flex-column text-white text-center">
 					<h1>PhotoStore</h1>
@@ -85,57 +84,36 @@
 			</section>
 			<!-- Header end -->
 
-			<!-- Popular products slider -->
-			<section class="popular-product-slider mb-5 overflow-hidden">
+			<!-- Contact form -->
+			<section>
 				<div class="container">
-					<h3 class="text-center mb-5">The most popular product</h3>
-					<div class="article-container d-flex justify-content-around align-items-center">
-						<i class="fa fa-chevron-left arrows d-flex justify-content-center align-items-center d-none d-md-block"></i>
-						<div id="article-slider" class="article-slider d-flex justify-content-around align-items-center">
-							<div class="article">
-								<img src="assets/images/products/d3300.jpeg" alt="d3300" class="img-fluid position-relative" />
-								<p>NIKON D3300</p>
-								<p>Price: 500 &euro;</p>
-								<p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-							</div>
-							<div class="article">
-								<img src="assets/images/products/d3300.jpeg" alt="d3300" class="img-fluid position-relative" />
-								<p>NIKON D3400</p>
-								<p>Price: 700 &euro;</p>
-								<p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-							</div>
-							<div class="article">
-								<img src="assets/images/products/d3300.jpeg" alt="d3300" class="img-fluid position-relative" />
-								<p>NIKON D3500</p>
-								<p>Price: 800 &euro;</p>
-								<p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-							</div>
+					<div class="row">
+						<div id="form-container" class="col-lg-6 m-auto shadow mb-5 rounded">
+							<p class="text-muted mb-3">To submit form, you need to buy some product.</p>
+
+							<form action="#" method="POST">
+								<label class="mt-3">Name</label>
+								<br />
+								<small id="errName" class="text-orange"></small>
+								<input type="text" class="form-control" id="name" placeholder="Enter a name" />
+
+								<label class="mt-3">Email</label>
+								<br />
+								<small id="errEmail" class="text-orange"></small>
+								<input type="text" class="form-control" id="email" placeholder="Enter an email" />
+
+								<label class="mt-3">Address</label>
+								<small id="errAddress" class="text-orange"></small>
+								<input type="text" class="form-control" id="address" placeholder="Address" />
+
+								<input type="button" id="btn-submit" class="btn btn-primary mt-3 mb-3 ms-3 float-end" value="Submit" />
+								<input type="button" id="btn-cart" class="btn btn-outline-primary mt-3 mb-3 float-end" value="Cart" />
+							</form>
 						</div>
-						<i class="fa fa-chevron-right arrows d-flex justify-content-center align-items-center d-none d-md-block"></i>
 					</div>
 				</div>
 			</section>
-			<!-- Popular products slider end -->
-
-			<!-- About us -->
-			<section class="about bg-orange">
-				<div class="container p-3 d-flex justify-content-around align-items-center">
-					<div class="about-left text-white">
-						<h4 class="pt-4 mb-4">About us</h4>
-						<p class="mb-3">We’re a new store company and we’re offering the best products in the region. If you are not satisfied with a product, we guarantee a cashback of 100%.</p>
-						<p>If you have some questions, feel free to ask by email: photostore@gmail.com</p>
-					</div>
-					<div class="about-right d-flex flex-wrap justify-content-center align-items-center d-md-block">
-						<img src="assets/images/thumbs-up.png" alt="Thumbs up" class="img-fluid position-relative" />
-						<img src="assets/images/camera.png" alt="Camera" class="img-fluid position-relative" />
-					</div>
-				</div>
-			</section>
-			<!-- About us end -->
-
-			<!-- Parallax image -->
-			<div class="container-fluid parallax"></div>
-			<!-- Parallax image end -->
+			<!-- Contact form -->
 
 			<!-- Useful links -->
 			<section class="bg-orange">
@@ -167,7 +145,16 @@
 					<h6>&copy; Vanja Veapi | 2022</h6>
 				</footer>
 			</section>
-			<!-- Useful links end -->
+		</div>
+
+		<!-- Product modal -->
+		<div id="product-modal" class="product-modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content p-3">
+					<i id="close-modal" class="fa fa-times text-end h1 me-3 mt-2" aria-hidden="true"></i>
+					<div id="product-content"></div>
+				</div>
+			</div>
 		</div>
 
 		<!-- Bootstrap JS & jQuery-->

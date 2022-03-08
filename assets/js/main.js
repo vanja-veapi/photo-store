@@ -33,6 +33,17 @@ let isCartOpen = false;
 
 const RECORDS_PER_PAGE = 10;
 let currentPage = 1;
+let activePage = 0;
+// Contact.html
+const btnSubmit = document.querySelector("#btn-submit");
+const btnCart = document.querySelector("#btn-cart");
+
+const nameId = document.querySelector("#name");
+const email = document.querySelector("#email");
+const address = document.querySelector("#address");
+const regExpName = /^[A-ZŠĐŽČĆ][a-zšđžčć]{2,12}$/;
+const regExpMail = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+const regExpAddr = /[A-ZČĆŽŠĐ1-9]([a-zčćžšđ0-9]{2,80}\s)+([0-9]{1,4}[a-zžđ]*|bb)$/;
 
 window.addEventListener("load", function () {
 	onReady(onReadyCallback);
@@ -49,11 +60,23 @@ window.addEventListener("load", function () {
 		fetchData(BASE_URL + "/brands.json", renderBrands);
 	}
 
+	if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
+		fetchData(BASE_URL + "/cameras.json", renderCameras);
+	}
+
+	if (this.window.location.pathname === "/contact.html") {
+		btnCart.addEventListener("click", toggleCart);
+		btnSubmit.addEventListener("click", submit);
+
+		nameId.addEventListener("blur", () => checkField(nameId, regExpName, errName));
+		email.addEventListener("blur", () => checkField(email, regExpMail, errEmail));
+		address.addEventListener("blur", () => checkField(address, regExpAddr, errAddress));
+	}
+
 	modal.style.transform = "translateX(0%)";
 	cart.addEventListener("click", toggleCart);
 	hamburger.addEventListener("click", toggleMenu);
 	itemsInCart.innerHTML = cartCount;
-
 });
 
 window.addEventListener("scroll", function () {
@@ -132,38 +155,45 @@ function renderBrands(brands) {
 // Cameras
 function renderCameras(cameras) {
 	allCameras = cameras;
-
+	if (window.location.pathname === "/index.html" || window.location.pathname === "/	" || window.location.pathname === "/contact.html") {
+		//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
+		return;
+	}
 	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-
+	let pageNumber = null
+	filterCameraBrandsArr.length === 0 ? pageNumber = numPages(cameras) : pageNumber = numPages(filteredArray);
 	// Ovu funkciju i addPageNumber cu da pozovem u filtered
-	let pageNumber = numPages(cameras);
+	//STARO
+	// let pageNumber = numPages(cameras)
+
 	addPageNumber(pageNumber);
 	addCameras(filteredArray);
 
-	const pages = document.querySelectorAll(".pages");
-	let activePage = 0;
-	pages[activePage].classList.add("active");
+	refershPageNumber();
+	// const pages = document.querySelectorAll(".pages");
+	// let activePage = 0;
+	// pages[activePage].classList.add("active");
 
-	pages.forEach((page) =>
-		page.addEventListener("click", function (e) {
-			e.preventDefault();
+	// pages.forEach((page) =>
+	// 	page.addEventListener("click", function (e) {
+	// 		e.preventDefault();
 
-			currentPage = e.target.dataset.id;
-			if (e.target !== this || e.target) {
-				this.classList.add("active")
-			}
-			if (activePage != currentPage - 1) {
-				console.log(activePage, currentPage);
-				pages[activePage].classList.remove("active");
-			}
-			console.log(pages[activePage]);
-			activePage = currentPage - 1;
-			console.log(activePage);
+	// 		currentPage = e.target.dataset.id;
+	// 		if (e.target !== this || e.target) {
+	// 			this.classList.add("active")
+	// 		}
+	// 		if (activePage != currentPage - 1) {
+	// 			console.log(activePage, currentPage);
+	// 			pages[activePage].classList.remove("active");
+	// 		}
+	// 		console.log(pages[activePage]);
+	// 		activePage = currentPage - 1;
+	// 		console.log(activePage);
 
-			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-			addCameras(filteredArray);
-		})
-	);
+	// 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
+	// 		addCameras(filteredArray);
+	// 	})
+	// );
 
 	const brands = document.querySelectorAll(".brand");
 	const sort = document.querySelector("#sort");
@@ -193,7 +223,16 @@ function renderCameras(cameras) {
 			// console.log(filterCameraBrandsArr);
 
 			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
+
+			// Novo - PAGINACIJA PA GI NA CI JA
+			filterCameraBrandsArr.length === 0 ? pageNumber = numPages(cameras) : pageNumber = numPages(filteredArray);
+			addPageNumber(pageNumber);
+
+			// Staro - PAGINACIJA PA GI NA CI JA
 			addCameras(filteredArray);
+
+			refershPageNumber();
+			// Kraj novog - PAGINACIJA PA GI NA CI JA
 		});
 	});
 
@@ -213,6 +252,33 @@ function renderCameras(cameras) {
 
 }
 
+function refershPageNumber() {
+	const pages = document.querySelectorAll(".pages");
+	pages[activePage].classList.add("active");
+
+	pages.forEach((page) =>
+		page.addEventListener("click", function (e) {
+			e.preventDefault();
+
+			currentPage = e.target.dataset.id;
+			if (e.target !== this || e.target) {
+				this.classList.add("active")
+			}
+			if (activePage != currentPage - 1) {
+				console.log(activePage, currentPage);
+				pages[activePage].classList.remove("active");
+			}
+			console.log(pages[activePage]);
+			activePage = currentPage - 1;
+			console.log(activePage);
+
+			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
+			addCameras(filteredArray);
+			console.log(filteredArray);
+			console.log("Menajj strani");
+		})
+	);
+}
 function addCameras(cameras) {
 	let html = "";
 
@@ -288,15 +354,20 @@ function filtered(data, searchQuery, sortQuery, cameraArr, currentPage) {
 		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
 	}
 	if (cameraArr.length === 0 && searchQuery == "") {
+		console.log("Usao sam ovdek");
 		filtered = changePage(currentPage, filtered);
+		console.log(filtered);
 	}
+
+
+
+	console.log("JA SAM OVDE");
 	//Ako sam na drugoj ili trecoj pretraga ne radi - Trebalo bi da je sredjeno
 	//Ako sortiram, on pregazi stranicu i dohvata sve iz camerasData, pa ga sortira po tom principu
 	return filtered;
 }
 
 /**
- * 
  * @returns Number of page on site.
  */
 function numPages(objJSON) {
@@ -316,7 +387,6 @@ function changePage(pageNum, camerasData) {
 		}
 		productsOnPage.push(camerasData[i]);
 	}
-	// console.log(productsOnPage);
 	return productsOnPage;
 }
 function addPageNumber(pages) {
@@ -336,6 +406,7 @@ function toggleCart() {
 	console.log(cart);
 	if (!isCartOpen) {
 		if (cart?.products.length === 0 || cart === null) {
+			cart = { products: [] }
 			renderCart(cart);
 		} else {
 			renderCart(cart);
@@ -499,6 +570,8 @@ function removeFromCart(modelId) {
 	return localStorage.setItem("cart", JSON.stringify(newState));
 }
 function renderCart(articles) {
+	console.log("Testiram index");
+	console.log(articles);
 	const productCart = document.querySelector("#product-cart");
 	const formSubmit = document.querySelector("#form-submit");
 	if (articles.products.length === 0) {
@@ -525,18 +598,6 @@ function renderCart(articles) {
 }
 
 /**
- * function toggleProductModal() {
-	const cameraId = Number(this.dataset.id);
-	const camera = toggleProductModal(cameraId)
-	showCamera(camera);
-}
-function toggleProductModal(cameraId) {
-	return allCameras.find(cam => cam.id === cameraId);
-}
-
-function addToCart(id) {
-	return
-}
 function setItemToLS(naziv, porudzbine) {
 	return localStorage.setItem(naziv, JSON.stringify(porudzbine));
 }
@@ -575,4 +636,58 @@ function calculateTotalCash() {
 	let sum = 0;
 	total.forEach(price => sum += Number(price.innerText))
 	sumId.innerHTML = sum;
+}
+function submit() {
+	const formContainer = document.querySelector("#form-container");
+	const isValidForm = checkForm();
+
+	console.log(isValidForm, cartCount);
+	if ((cartCount == 0 || !cartCount) || !isValidForm) {
+		formContainer.classList.add("error-shake")
+		setTimeout(() => formContainer.classList.remove("error-shake"), 1000);
+	} else {
+		console.log("Uspesno ste narucili kameru");
+	}
+}
+function checkForm() {
+	let isValid = false;
+	let errorCounter = 0;
+	isValid = checkField(nameId, regExpName, errName);
+	console.log(isValid);
+
+	if (!isValid) errorCounter++;
+	isValid = checkField(email, regExpMail, errEmail);
+	console.log(isValid);
+
+	if (!isValid) errorCounter++;
+	isValid = checkField(address, regExpAddr, errAddress);
+	console.log(isValid);
+
+	if (!isValid) errorCounter++;
+
+	if (errorCounter === 0) {
+		isValid = true;
+	}
+	return isValid;
+}
+
+function checkField(inputName, regularExpression, errMsg) {
+	let isValid = false;
+	if (inputName.value === "") {
+		inputName.style.border = "1px solid #ff0000";
+		errMsg.innerHTML = "Name field can't be empty.";
+	}
+	else {
+		if (!regularExpression.test(inputName.value)) {
+			inputName.style.border = "1px solid #ff0000";
+			errMsg.innerHTML = 'Name is not in valid format. Name must start with first capital letter and to have minimum 3 characters and maximum 14 characters.';
+
+		}
+		else {
+			inputName.style.border = "1px solid #ced4da";
+			errMsg.innerHTML = "";
+			isValid = true;
+		}
+	}
+	return isValid;
 }
