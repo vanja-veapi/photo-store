@@ -1,6 +1,8 @@
 /**
  * 1. Na index.htmlu kad se dodje skroluje, ne gubi se nav bg
- * 2. Treba da se nav ispisuje dinamicki 
+ * 2. Treba da se nav ispisuje dinamicki
+ * 3. Ne radi klik na index.html - radi
+ * 4. Kad je upaljen mobile nav i cart, da radi po principu accordiona, jedan od ta dva sme da bude upaljen
  */
 
 const BASE_URL = "assets/data";
@@ -26,6 +28,7 @@ let searchQuery = "";
 let sortType = localStorage.getItem("sort");
 let filterCameraBrandsArr = JSON.parse(localStorage.getItem("cameras")) === null ? [] : JSON.parse(localStorage.getItem("cameras"));
 let cartCount = localStorage.getItem("cart-counter") === null ? 0 : localStorage.getItem("cart-counter");
+
 let isCartOpen = false;
 
 const RECORDS_PER_PAGE = 10;
@@ -33,6 +36,8 @@ let currentPage = 1;
 
 window.addEventListener("load", function () {
 	onReady(onReadyCallback);
+
+	//Ovo sa ternarnim odraditi
 	if (this.scrollY >= 50) {
 		header.classList.add("bg-dark", "size");
 	} else {
@@ -54,12 +59,13 @@ window.addEventListener("load", function () {
 window.addEventListener("scroll", function () {
 	if (this.scrollY >= 50) {
 		header.classList.add("bg-dark", "size");
-		modal.style.top = "80px";
+		// modal.style.top = "80px";
 	} else if (this.scrollY <= 50 && mobileMenu?.classList.contains('d-none')) {
 		header.classList.remove("bg-dark");
 		modal.style.removeProperty("top");
 	}
 
+	//Ovo sa ternarnim
 	if (this.scrollY <= 50) {
 		header.classList.remove("size")
 	}
@@ -327,35 +333,48 @@ function addPageNumber(pages) {
 
 function toggleCart() {
 	let cart = JSON.parse(localStorage.getItem("cart"));
-	const productCart = document.querySelector("#product-cart");
-
+	console.log(cart);
 	if (!isCartOpen) {
 		if (cart?.products.length === 0 || cart === null) {
-			console.log("Nema proizvoda");
+			renderCart(cart);
 		} else {
-			let res = [];
-			let quantityArr = [];
-			let html = "";
-			res = allCameras.filter(camera => cart.products.find(element => {
+			renderCart(cart);
+			calculateTotalCash();
+			let btnDelete = document.querySelectorAll(".btn-delete");
+			console.log(btnDelete);
 
-				if (camera.id === element.id) {
-					return quantityArr.push(element.quantity)
-					// console.log({ ...camera, kolikinaBrapoMoj: element.quantity });
-					// return res = { ...camera, aaaaaaaasasasssssddddddddd: element.quantity };
+			btnDelete.forEach(btn => {
+				btn.addEventListener("click", function () {
+					removeFromCart(Number(this.dataset.id));
+					this.parentElement.parentElement.remove();
+				})
+			});
 
-				}
-			}));
-			res.forEach((item, index) => {
-				console.log(html);
-				html += makeCartItem({ ...item, quantity: quantityArr[index] });
+			let inputQuantity = document.querySelectorAll(".input-quantity");
+			inputQuantity.forEach((el, index) => {
+				el.addEventListener("change", function () {
+					let id = Number(this.dataset.id);
+					let quantity = this.valueAsNumber;
+					let total = document.querySelectorAll(".total")[index];
+					let pricePerProduct = document.querySelectorAll(".price-per-product")[index];
+
+					if (quantity <= 1) {
+						quantity = 1;
+						this.value = quantity;
+					}
+
+					total.innerHTML = Number(pricePerProduct.value) * quantity;
+
+
+					addToCart(id, quantity);
+					calculateTotalCash();
+				});
 			})
-
-			productCart.innerHTML = html;
 		}
 	}
-	calculateTotalCash();
 
 	isCartOpen = !isCartOpen;
+	document.body.classList.toggle("overflow-hidden");
 	return modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-100%)" : modal.style.transform = "translateX(0%)";
 }
 
@@ -392,8 +411,8 @@ function showCamera(model) {
 			<div class='col-md-12 col-lg-8'>
 				<p>${model.name}</p>
 				<div class="d-flex">
-					<p class="h2">${model.price.current}</p>
-					${model.price.old === null ? "" : `<small class="ms-2"><s>${model.price.old}</s></small>`}
+					<p class="h2">${model.price.current} &euro;</p>
+					${model.price.old === null ? "" : `<small class="ms-2"><s>${model.price.old} &euro;</s></small>`}
 				</div>
 				<p>${model.description === null ? "Product has no description." : model.description}</p>
 				<button id="add-to-cart" class="btn btn-primary mt-5" data-id=${model.id}>Add to cart</button>
@@ -422,12 +441,12 @@ function showCamera(model) {
 	});
 
 }
-function addToCart(modelId) {
+function fetchCart(porudzbina, id) {
+	return porudzbina.products.find(e => e.id === id)
+}
+function addToCart(modelId, quantity = null) {
 	let order = JSON.parse(localStorage.getItem("cart"));
 
-	function fetchCart(porudzbina, id) {
-		return porudzbina.products.find(e => e.id === id)
-	}
 
 	if (!order) {
 		order = {
@@ -436,11 +455,15 @@ function addToCart(modelId) {
 	}
 
 	const article = fetchCart(order, modelId);
-
+	console.log(article);
+	console.log(quantity);
 
 	if (article) {
-		console.log("Postoji");
-		article.quantity += 1;
+		if (quantity === null) {
+			article.quantity += 1;
+		} else {
+			article.quantity = quantity;
+		}
 	} else {
 		console.log("Ne postoji")
 		order.products.push({
@@ -451,10 +474,53 @@ function addToCart(modelId) {
 
 	return localStorage.setItem("cart", JSON.stringify(order));
 }
+function removeFromCart(modelId) {
+	const id = modelId;
 
+	let order = JSON.parse(localStorage.getItem("cart"));
+	const article = fetchCart(order, id);
+
+	let newState = order.products.filter(e => e.id != article.id)
+	if (newState.length === 0) {
+		let ispis = "<h1 class='w-100 text-center'>The cart is empty</h1>";
+		// let korpaTabela = document.querySelector("#korpaTabela").innerHTML = ispis
+		console.log(ispis);
+	}
+	console.log(newState)
+	newState = {
+		products: newState
+	}
+	itemsInCart.innerHTML = Number(localStorage.getItem("cart-counter")) - 1;
+	localStorage.setItem("cart-counter", Number(itemsInCart.innerHTML)); // Novi broj artikala u korpi, nakon brisanja
+	if (Number(itemsInCart.innerHTML) === 0) {
+		renderCart(newState)
+	}
+
+	return localStorage.setItem("cart", JSON.stringify(newState));
+}
 function renderCart(articles) {
-	if (articles.length === 0) {
+	const productCart = document.querySelector("#product-cart");
+	const formSubmit = document.querySelector("#form-submit");
+	if (articles.products.length === 0) {
+		formSubmit.classList.add("d-none");
+		productCart.innerHTML = "The cart is empty!";
 
+	} else {
+		console.log("IDE PROMENA");
+		let res = [];
+		let quantityArr = [];
+		let html = "";
+		res = allCameras.filter(camera => articles?.products.find(element => {
+
+			if (camera.id === element.id) {
+				return quantityArr.push(element.quantity)
+				// console.log({ ...camera, kolikinaBrapoMoj: element.quantity });
+				// return res = { ...camera, aaaaaaaasasasssssddddddddd: element.quantity };
+
+			}
+		}));
+		res.forEach((item, index) => html += makeCartItem({ ...item, quantity: quantityArr[index] }))
+		productCart.innerHTML = html;
 	}
 }
 
@@ -480,9 +546,10 @@ function getItemFromLS(name) {
  */
 
 function makeCartItem(item) {
-	console.log(item);
-	return `<div class="col-4 p-3">
-	<img src="assets/images/products/${item.img.src}" alt="${item.img.alt}" class="img-fluid" />
+	return `
+	<div class='cart-item'>
+		<div class="col-4 p-3">
+			<img src="assets/images/products/${item.img.src}" alt="${item.img.alt}" class="img-fluid" />
 		</div>
 		<div class="col-8">
 			<div class="d-flex">
@@ -491,13 +558,16 @@ function makeCartItem(item) {
 			</div>
 			<div class="d-flex">
 				<p class="me-3">Price:</p>
-				<p class="total">${item.price.current * item.quantity}</p>
+				<p class="total me-3">${item.price.current * item.quantity}</p>
+				<input type="hidden" class="price-per-product" value="${item.price.current}">
 			</div>
 			<div class="d-flex">
 				<p class="me-3">Quantity:</p>
-				<input type="number" id="quantity" class="w-25 form-control" value="${item.quantity}" />
+				<input type="number" id="quantity" class="input-quantity w-25 form-control" value="${item.quantity}" data-id=${item.id} />
 			</div>
-		</div>`
+			<button class="btn btn-primary btn-delete" data-id=${item.id}>Delete</button>
+		</div>
+	</div>`;
 }
 function calculateTotalCash() {
 	const total = document.querySelectorAll(".total");

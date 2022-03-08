@@ -147,18 +147,25 @@ li > button.btn:focus {
 	bottom: -90%;
 	transform: skewY(355deg);
 }
+#modal.modal {
+	overflow: hidden;
+}
 .modal {
 	max-width: 400px;
 	position: fixed;
 	min-height: 100vh;
 	transition: 0.4s;
-	top: 0;
+	top: 80px;
 	left: 100%;
 	z-index: 2;
 	transform: translateX(0);
 }
 
 /* My classes */
+#product-cart {
+	max-height: 600px;
+	overflow-y: auto;
+}
 .header {
 	transition: 0.3s;
 	z-index: 99;
