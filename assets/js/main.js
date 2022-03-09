@@ -1,9 +1,7 @@
 /**
  * 1. Na index.htmlu kad se dodje skroluje, ne gubi se nav bg
  * 2. Treba da se nav ispisuje dinamicki
- * 3. Ne radi klik na index.html - radi
  * 4. Kad je upaljen mobile nav i cart, da radi po principu accordiona, jedan od ta dva sme da bude upaljen
- * 5. Namestiti paginaciju posle filtriranja
  */
 
 const BASE_URL = "assets/data";
@@ -163,38 +161,13 @@ function renderCameras(cameras) {
 	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 	let pageNumber = null
 	pageNumber = numPages(filteredArray);
-	// Ovu funkciju i addPageNumber cu da pozovem u filtered
-	//STARO
-	// let pageNumber = numPages(cameras)
+
 
 	addPageNumber(pageNumber);
 	addCameras(filteredArray, currentPage - 1);
 
 	refershPageNumber();
-	// const pages = document.querySelectorAll(".pages");
-	// let activePage = 0;
-	// pages[activePage].classList.add("active");
 
-	// pages.forEach((page) =>
-	// 	page.addEventListener("click", function (e) {
-	// 		e.preventDefault();
-
-	// 		currentPage = e.target.dataset.id;
-	// 		if (e.target !== this || e.target) {
-	// 			this.classList.add("active")
-	// 		}
-	// 		if (activePage != currentPage - 1) {
-	// 			console.log(activePage, currentPage);
-	// 			pages[activePage].classList.remove("active");
-	// 		}
-	// 		console.log(pages[activePage]);
-	// 		activePage = currentPage - 1;
-	// 		console.log(activePage);
-
-	// 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-	// 		addCameras(filteredArray);
-	// 	})
-	// );
 
 	const brands = document.querySelectorAll(".brand");
 	const sort = document.querySelector("#sort");
@@ -204,7 +177,7 @@ function renderCameras(cameras) {
 		searchQuery = e.target.value.toLowerCase();
 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
-		refreshScreen(filteredArray, currentPage - 1);
+		refreshScreen(filteredArray);
 	});
 
 	// Brands checkboxes
@@ -221,10 +194,10 @@ function renderCameras(cameras) {
 				filterCameraBrandsArr.splice(index, 1);
 				localStorage.setItem("cameras", JSON.stringify(filterCameraBrandsArr));
 			}
-			// console.log(filterCameraBrandsArr);
 
 			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-			refreshScreen(filteredArray, currentPage - 1);
+			console.log(filteredArray);
+			refreshScreen(filteredArray);
 		});
 	});
 
@@ -245,10 +218,15 @@ function renderCameras(cameras) {
 }
 
 
-function refreshScreen(cameras, pageIndex) {
+function refreshScreen(cameras, pageIndex = 0) {
 	// Novo - PAGINACIJA PA GI NA CI JA
-	totalPages = numPages(cameras);
+	let totalPages = numPages(cameras);
 
+	// if (totalPages === 1) {
+	// 	pageIndex = 0;
+	// }
+
+	console.log("---[TOTAL PAGES]---");
 	console.log(totalPages);
 
 	// Napravi listu stranica
@@ -266,12 +244,15 @@ function refershPageNumber() {
 	const pages = document.querySelectorAll(".pages");
 
 	if (pages[activePage] === undefined) {
-		activePage = currentPage - currentPage;
+		// USAO SAM OVDE
 		console.log(currentPage);
+		// return refreshScreen(allCameras, currentPage - 1)
+		activePage = currentPage - currentPage;
 	}
-	console.log(pages);
-	console.log(activePage);
-	pages[activePage].classList.add("active");
+
+	if (pages[activePage] !== undefined) {
+		pages[activePage].classList.add("active");
+	}
 
 	pages.forEach((page) =>
 		page.addEventListener("click", function (e) {
@@ -285,16 +266,19 @@ function refershPageNumber() {
 				console.log(activePage, currentPage);
 				pages[activePage].classList.remove("active");
 			}
-			console.log(pages[activePage]);
 			activePage = currentPage - 1;
+			console.log("---[ACTIVE PAGE]---");
 			console.log(activePage);
 
 			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
+			// refreshScreen(filteredArray, activePage);
 			refreshScreen(filteredArray, activePage);
-
+			console.log("---[PAGES EVENT LISTENER (CLICK)]---");
 			console.log(filteredArray);
-			console.log("Menajj strani");
+			console.log(activePage);
+			// console.log(filteredArray);
+			// console.log("Menajj strani");
 		})
 	);
 }
@@ -362,17 +346,10 @@ function filtered(data, searchQuery, sortQuery, cameraArr, currentPage) {
 	let filtered = data.filter((e) => e.name.toLowerCase().includes(searchQuery));
 	filtered = sorting(filtered, sortQuery);
 
-	// console.log("Treba da ispise trenutno stranicu pod rednim brojem " + currentPage);
-
-
-
 	//If brands array has no length 0, then enter in if adn go through all filtered(cameras) which brandId is = with  numberId in array... 
 	if (cameraArr.length !== 0) {
 		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
 	}
-
-	//Ako sam na drugoj ili trecoj pretraga ne radi - Trebalo bi da je sredjeno
-	//Ako sortiram, on pregazi stranicu i dohvata sve iz camerasData, pa ga sortira po tom principu
 	return filtered;
 }
 
@@ -385,11 +362,7 @@ function numPages(objJSON) {
 function changePage(pageNum, camerasData) {
 	let productsOnPage = [];
 
-	/*Formula za for je sledeca
-		i = 2 * 10 = 20
-		meni ne postoji camerasData[20] i zato on vraca undefined, 
-		meni treba da ovo i bude 0 i da krene od 0 elemtna
-	*/
+	/*Formula za for je sledeca i = 2 * 10 = 20 meni ne postoji camerasData[20] i zato on vraca undefined, meni treba da ovo i bude 0 i da krene od 0 elemtna */
 	for (let i = (pageNum - 1) * RECORDS_PER_PAGE; i < pageNum * RECORDS_PER_PAGE; i++) {
 		if (camerasData[i] === undefined) {
 			break;
@@ -503,7 +476,6 @@ function showCamera(model) {
 	const addCartButton = document.querySelector("#add-to-cart");
 	addCartButton.addEventListener("click", function () {
 		let itemsCart = Number(itemsInCart.innerText);
-		console.log(itemsInCart);
 		let cart = null;
 
 		if (JSON.parse(localStorage.getItem("cart")) !== null) {
@@ -535,9 +507,6 @@ function addToCart(modelId, quantity = null) {
 	}
 
 	const article = fetchCart(order, modelId);
-	console.log(article);
-	console.log(quantity);
-
 	if (article) {
 		if (quantity === null) {
 			article.quantity += 1;
@@ -545,7 +514,6 @@ function addToCart(modelId, quantity = null) {
 			article.quantity = quantity;
 		}
 	} else {
-		console.log("Ne postoji")
 		order.products.push({
 			id: modelId,
 			quantity: 1
@@ -588,7 +556,6 @@ function renderCart(articles) {
 		productCart.innerHTML = "The cart is empty!";
 
 	} else {
-		console.log("IDE PROMENA");
 		let res = [];
 		let quantityArr = [];
 		let html = "";
@@ -596,9 +563,6 @@ function renderCart(articles) {
 
 			if (camera.id === element.id) {
 				return quantityArr.push(element.quantity)
-				// console.log({ ...camera, kolikinaBrapoMoj: element.quantity });
-				// return res = { ...camera, aaaaaaaasasasssssddddddddd: element.quantity };
-
 			}
 		}));
 		res.forEach((item, index) => html += makeCartItem({ ...item, quantity: quantityArr[index] }))
@@ -662,15 +626,12 @@ function checkForm() {
 	let isValid = false;
 	let errorCounter = 0;
 	isValid = checkField(nameId, regExpName, errName);
-	console.log(isValid);
 
 	if (!isValid) errorCounter++;
 	isValid = checkField(email, regExpMail, errEmail);
-	console.log(isValid);
 
 	if (!isValid) errorCounter++;
 	isValid = checkField(address, regExpAddr, errAddress);
-	console.log(isValid);
 
 	if (!isValid) errorCounter++;
 

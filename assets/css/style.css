@@ -185,6 +185,10 @@ li > button.btn:focus {
 }
 
 /* My classes */
+#products-container > .container {
+	padding-left: unset;
+	padding-right: unset;
+}
 #product-cart {
 	max-height: 600px;
 	overflow-y: auto;
