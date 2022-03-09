@@ -3,6 +3,7 @@
  * 2. Treba da se nav ispisuje dinamicki
  * 3. Ne radi klik na index.html - radi
  * 4. Kad je upaljen mobile nav i cart, da radi po principu accordiona, jedan od ta dva sme da bude upaljen
+ * 5. Namestiti paginaciju posle filtriranja
  */
 
 const BASE_URL = "assets/data";
@@ -155,19 +156,19 @@ function renderBrands(brands) {
 // Cameras
 function renderCameras(cameras) {
 	allCameras = cameras;
-	if (window.location.pathname === "/index.html" || window.location.pathname === "/	" || window.location.pathname === "/contact.html") {
+	if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
 		//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
 		return;
 	}
 	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 	let pageNumber = null
-	filterCameraBrandsArr.length === 0 ? pageNumber = numPages(cameras) : pageNumber = numPages(filteredArray);
+	pageNumber = numPages(filteredArray);
 	// Ovu funkciju i addPageNumber cu da pozovem u filtered
 	//STARO
 	// let pageNumber = numPages(cameras)
 
 	addPageNumber(pageNumber);
-	addCameras(filteredArray);
+	addCameras(filteredArray, currentPage - 1);
 
 	refershPageNumber();
 	// const pages = document.querySelectorAll(".pages");
@@ -203,7 +204,7 @@ function renderCameras(cameras) {
 		searchQuery = e.target.value.toLowerCase();
 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
-		addCameras(filteredArray);
+		refreshScreen(filteredArray, currentPage - 1);
 	});
 
 	// Brands checkboxes
@@ -223,16 +224,7 @@ function renderCameras(cameras) {
 			// console.log(filterCameraBrandsArr);
 
 			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-
-			// Novo - PAGINACIJA PA GI NA CI JA
-			filterCameraBrandsArr.length === 0 ? pageNumber = numPages(cameras) : pageNumber = numPages(filteredArray);
-			addPageNumber(pageNumber);
-
-			// Staro - PAGINACIJA PA GI NA CI JA
-			addCameras(filteredArray);
-
-			refershPageNumber();
-			// Kraj novog - PAGINACIJA PA GI NA CI JA
+			refreshScreen(filteredArray, currentPage - 1);
 		});
 	});
 
@@ -246,14 +238,39 @@ function renderCameras(cameras) {
 		sortType = this.value;
 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 
-		addCameras(filteredArray);
+		addCameras(filteredArray, currentPage - 1);
 		localStorage.setItem("sort", sortType);
 	});
 
 }
 
+
+function refreshScreen(cameras, pageIndex) {
+	// Novo - PAGINACIJA PA GI NA CI JA
+	totalPages = numPages(cameras);
+
+	console.log(totalPages);
+
+	// Napravi listu stranica
+	addPageNumber(totalPages);
+
+	// Izlistaj vidljive kamere
+	addCameras(cameras, pageIndex);
+
+	refershPageNumber();
+	// Kraj novog - PAGINACIJA PA GI NA CI JA
+}
+
+
 function refershPageNumber() {
 	const pages = document.querySelectorAll(".pages");
+
+	if (pages[activePage] === undefined) {
+		activePage = currentPage - currentPage;
+		console.log(currentPage);
+	}
+	console.log(pages);
+	console.log(activePage);
 	pages[activePage].classList.add("active");
 
 	pages.forEach((page) =>
@@ -273,20 +290,20 @@ function refershPageNumber() {
 			console.log(activePage);
 
 			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-			addCameras(filteredArray);
+
+			refreshScreen(filteredArray, activePage);
+
 			console.log(filteredArray);
 			console.log("Menajj strani");
 		})
 	);
 }
-function addCameras(cameras) {
+function addCameras(cameras, pageIndex) {
 	let html = "";
 
-	cameras.forEach((camera, index) => {
-		if (index < RECORDS_PER_PAGE) {
-			html += makeCamera(camera);
-		}
-	});
+	for (let i = pageIndex * RECORDS_PER_PAGE; i < (pageIndex + 1) * RECORDS_PER_PAGE; i++) {
+		if (cameras[i]) html += makeCamera(cameras[i]);
+	}
 
 	//If there is no product, return notification...
 	if (cameras.length === 0) {
@@ -353,15 +370,7 @@ function filtered(data, searchQuery, sortQuery, cameraArr, currentPage) {
 	if (cameraArr.length !== 0) {
 		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
 	}
-	if (cameraArr.length === 0 && searchQuery == "") {
-		console.log("Usao sam ovdek");
-		filtered = changePage(currentPage, filtered);
-		console.log(filtered);
-	}
 
-
-
-	console.log("JA SAM OVDE");
 	//Ako sam na drugoj ili trecoj pretraga ne radi - Trebalo bi da je sredjeno
 	//Ako sortiram, on pregazi stranicu i dohvata sve iz camerasData, pa ga sortira po tom principu
 	return filtered;
