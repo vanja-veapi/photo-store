@@ -154,20 +154,19 @@ function renderBrands(brands) {
 // Cameras
 function renderCameras(cameras) {
 	allCameras = cameras;
-	if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
-		//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
-		return;
-	}
+	// if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
+	// 	//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
+	// 	return;
+	// }
 	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 	let pageNumber = null
+	let totalPages = 1;
+
 	pageNumber = numPages(filteredArray);
 
-
-	addPageNumber(pageNumber);
+	updatePageNumber(pageNumber);
 	addCameras(filteredArray, currentPage - 1);
-
-	refershPageNumber();
-
+	refreshPageNumber();
 
 	const brands = document.querySelectorAll(".brand");
 	const sort = document.querySelector("#sort");
@@ -176,6 +175,10 @@ function renderCameras(cameras) {
 	search.addEventListener("input", function (e) {
 		searchQuery = e.target.value.toLowerCase();
 		const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
+
+		// Ovde treba da se desi promena broja stranice
+		totalPages = numPages(filteredArray);
+		updatePageNumber(totalPages);
 
 		refreshScreen(filteredArray);
 	});
@@ -196,7 +199,11 @@ function renderCameras(cameras) {
 			}
 
 			const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-			console.log(filteredArray);
+
+			// Ovde treba da se desi promena broja stranice
+			totalPages = numPages(filteredArray);
+			updatePageNumber(totalPages);
+
 			refreshScreen(filteredArray);
 		});
 	});
@@ -217,30 +224,12 @@ function renderCameras(cameras) {
 
 }
 
-
 function refreshScreen(cameras, pageIndex = 0) {
-	// Novo - PAGINACIJA PA GI NA CI JA
-	let totalPages = numPages(cameras);
-
-	// if (totalPages === 1) {
-	// 	pageIndex = 0;
-	// }
-
-	console.log("---[TOTAL PAGES]---");
-	console.log(totalPages);
-
-	// Napravi listu stranica
-	addPageNumber(totalPages);
-
-	// Izlistaj vidljive kamere
 	addCameras(cameras, pageIndex);
-
-	refershPageNumber();
-	// Kraj novog - PAGINACIJA PA GI NA CI JA
+	refreshPageNumber();
 }
 
-
-function refershPageNumber() {
+function refreshPageNumber() {
 	const pages = document.querySelectorAll(".pages");
 
 	if (pages[activePage] === undefined) {
@@ -371,7 +360,8 @@ function changePage(pageNum, camerasData) {
 	}
 	return productsOnPage;
 }
-function addPageNumber(pages) {
+function updatePageNumber(pages) {
+	console.log("Aktivirao sam funkciju AddPageNumber");
 	const pagination = document.querySelector("#pagination");
 
 	let html = "";
@@ -547,8 +537,6 @@ function removeFromCart(modelId) {
 	return localStorage.setItem("cart", JSON.stringify(newState));
 }
 function renderCart(articles) {
-	console.log("Testiram index");
-	console.log(articles);
 	const productCart = document.querySelector("#product-cart");
 	const formSubmit = document.querySelector("#form-submit");
 	if (articles.products.length === 0) {
