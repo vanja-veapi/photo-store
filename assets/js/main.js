@@ -2,7 +2,8 @@
  * 1. Na index.htmlu kad se dodje skroluje, ne gubi se nav bg
  * 2. Treba da se nav ispisuje dinamicki
  * 4. Kad je upaljen mobile nav i cart, da radi po principu accordiona, jedan od ta dva sme da bude upaljen
- */
+5. Kad uradim delete iz korpe ne updatuje se cena
+*/
 
 const BASE_URL = "assets/data";
 
@@ -44,6 +45,8 @@ const regExpName = /^[A-ZŠĐŽČĆ][a-zšđžčć]{2,12}$/;
 const regExpMail = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 const regExpAddr = /[A-ZČĆŽŠĐ1-9]([a-zčćžšđ0-9]{2,80}\s)+([0-9]{1,4}[a-zžđ]*|bb)$/;
 
+let infoModalCounter = 0;
+
 window.addEventListener("load", function () {
 	onReady(onReadyCallback);
 
@@ -82,14 +85,14 @@ window.addEventListener("scroll", function () {
 	if (this.scrollY >= 50) {
 		header.classList.add("bg-dark", "size");
 		// modal.style.top = "80px";
-	} else if (this.scrollY <= 50 && mobileMenu?.classList.contains('d-none')) {
+	} else if (this.scrollY <= 50 && mobileMenu?.classList.contains("d-none")) {
 		header.classList.remove("bg-dark");
 		modal.style.removeProperty("top");
 	}
 
 	//Ovo sa ternarnim
 	if (this.scrollY <= 50) {
-		header.classList.remove("size")
+		header.classList.remove("size");
 	}
 });
 
@@ -159,7 +162,7 @@ function renderCameras(cameras) {
 	// 	return;
 	// }
 	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
-	let pageNumber = null
+	let pageNumber = null;
 	let totalPages = 1;
 
 	pageNumber = numPages(filteredArray);
@@ -221,7 +224,6 @@ function renderCameras(cameras) {
 		addCameras(filteredArray, currentPage - 1);
 		localStorage.setItem("sort", sortType);
 	});
-
 }
 
 function refreshScreen(cameras, pageIndex = 0) {
@@ -249,7 +251,7 @@ function refreshPageNumber() {
 
 			currentPage = e.target.dataset.id;
 			if (e.target !== this || e.target) {
-				this.classList.add("active")
+				this.classList.add("active");
 			}
 			if (activePage != currentPage - 1) {
 				console.log(activePage, currentPage);
@@ -286,9 +288,9 @@ function addCameras(cameras, pageIndex) {
 
 	//Ako mi se budu pravili neki infiniti loopovi moguce da je ovde problem
 	const productCards = document.querySelectorAll(".product-cards");
-	productCards.forEach(card => {
+	productCards.forEach((card) => {
 		card.addEventListener("click", toggleProductModal);
-	})
+	});
 
 	closeModal.addEventListener("click", function () {
 		productModal.classList.toggle("show");
@@ -335,7 +337,7 @@ function filtered(data, searchQuery, sortQuery, cameraArr, currentPage) {
 	let filtered = data.filter((e) => e.name.toLowerCase().includes(searchQuery));
 	filtered = sorting(filtered, sortQuery);
 
-	//If brands array has no length 0, then enter in if adn go through all filtered(cameras) which brandId is = with  numberId in array... 
+	//If brands array has no length 0, then enter in if adn go through all filtered(cameras) which brandId is = with  numberId in array...
 	if (cameraArr.length !== 0) {
 		filtered = filtered.filter((e) => cameraArr.includes(e.brandId));
 	}
@@ -378,7 +380,7 @@ function toggleCart() {
 	console.log(cart);
 	if (!isCartOpen) {
 		if (cart?.products.length === 0 || cart === null) {
-			cart = { products: [] }
+			cart = { products: [] };
 			renderCart(cart);
 		} else {
 			renderCart(cart);
@@ -386,11 +388,11 @@ function toggleCart() {
 			let btnDelete = document.querySelectorAll(".btn-delete");
 			console.log(btnDelete);
 
-			btnDelete.forEach(btn => {
+			btnDelete.forEach((btn) => {
 				btn.addEventListener("click", function () {
 					removeFromCart(Number(this.dataset.id));
 					this.parentElement.parentElement.remove();
-				})
+				});
 			});
 
 			let inputQuantity = document.querySelectorAll(".input-quantity");
@@ -408,27 +410,26 @@ function toggleCart() {
 
 					total.innerHTML = Number(pricePerProduct.value) * quantity;
 
-
 					addToCart(id, quantity);
 					calculateTotalCash();
 				});
-			})
+			});
 		}
 	}
 
 	isCartOpen = !isCartOpen;
 	document.body.classList.toggle("overflow-hidden");
-	return modal.style.transform === "translateX(0%)" ? modal.style.transform = "translateX(-100%)" : modal.style.transform = "translateX(0%)";
+	return modal.style.transform === "translateX(0%)" ? (modal.style.transform = "translateX(-100%)") : (modal.style.transform = "translateX(0%)");
 }
 
 function toggleMenu() {
 	mobileMenu.classList.toggle("top-100");
 	if (window.scrollY <= 50) {
-		header.classList.toggle("bg-dark")
+		header.classList.toggle("bg-dark");
 	}
 
 	if (mobileMenu.classList[6] === "d-none") {
-		return mobileMenu.classList.toggle("d-none")
+		return mobileMenu.classList.toggle("d-none");
 	}
 
 	mobileMenu.classList.toggle("d-none");
@@ -439,7 +440,7 @@ function toggleProductModal() {
 	showCamera(camera);
 }
 function findCamera(cameraId) {
-	return allCameras.find(cam => cam.id === cameraId);
+	return allCameras.find((cam) => cam.id === cameraId);
 }
 function showCamera(model) {
 	productModal.classList.add("show");
@@ -468,9 +469,24 @@ function showCamera(model) {
 		let itemsCart = Number(itemsInCart.innerText);
 		let cart = null;
 
+		const infoModal = document.querySelector("#info-modal-container");
+
+		if (infoModalCounter === 4) {
+			infoModal.innerHTML = "";
+			infoModalCounter = 0;
+		}
+
+		const infoCard = document.createElement("div");
+		const cardContent = document.createTextNode("You have successfully added an item to the cart");
+		infoCard.setAttribute("class", "alert alert-warning info");
+		infoCard.appendChild(cardContent);
+		infoModal.appendChild(infoCard);
+		// infoModal.innerHTML += `<div class="alert alert-primary info">You have successfully added an item to the cart</div>`;
+		infoModalCounter++; // infoModal.classList.remove("d-none");
+
 		if (JSON.parse(localStorage.getItem("cart")) !== null) {
 			cart = JSON.parse(localStorage.getItem("cart"));
-			let proba = cart.products.find(item => item.id === model.id);
+			let proba = cart.products.find((item) => item.id === model.id);
 			if (proba === undefined) {
 				itemsInCart.innerHTML = itemsCart += 1;
 			}
@@ -478,22 +494,20 @@ function showCamera(model) {
 			itemsInCart.innerHTML = itemsCart += 1;
 		}
 
-		localStorage.setItem("cart-counter", itemsInCart.innerHTML)
-		addToCart(model.id)
+		localStorage.setItem("cart-counter", itemsInCart.innerHTML);
+		addToCart(model.id);
 	});
-
 }
 function fetchCart(porudzbina, id) {
-	return porudzbina.products.find(e => e.id === id)
+	return porudzbina.products.find((e) => e.id === id);
 }
 function addToCart(modelId, quantity = null) {
 	let order = JSON.parse(localStorage.getItem("cart"));
 
-
 	if (!order) {
 		order = {
-			products: []
-		}
+			products: [],
+		};
 	}
 
 	const article = fetchCart(order, modelId);
@@ -506,8 +520,8 @@ function addToCart(modelId, quantity = null) {
 	} else {
 		order.products.push({
 			id: modelId,
-			quantity: 1
-		})
+			quantity: 1,
+		});
 	}
 
 	return localStorage.setItem("cart", JSON.stringify(order));
@@ -518,20 +532,20 @@ function removeFromCart(modelId) {
 	let order = JSON.parse(localStorage.getItem("cart"));
 	const article = fetchCart(order, id);
 
-	let newState = order.products.filter(e => e.id != article.id)
+	let newState = order.products.filter((e) => e.id != article.id);
 	if (newState.length === 0) {
 		let ispis = "<h1 class='w-100 text-center'>The cart is empty</h1>";
 		// let korpaTabela = document.querySelector("#korpaTabela").innerHTML = ispis
 		console.log(ispis);
 	}
-	console.log(newState)
+	console.log(newState);
 	newState = {
-		products: newState
-	}
+		products: newState,
+	};
 	itemsInCart.innerHTML = Number(localStorage.getItem("cart-counter")) - 1;
 	localStorage.setItem("cart-counter", Number(itemsInCart.innerHTML)); // Novi broj artikala u korpi, nakon brisanja
 	if (Number(itemsInCart.innerHTML) === 0) {
-		renderCart(newState)
+		renderCart(newState);
 	}
 
 	return localStorage.setItem("cart", JSON.stringify(newState));
@@ -542,18 +556,18 @@ function renderCart(articles) {
 	if (articles.products.length === 0) {
 		formSubmit.classList.add("d-none");
 		productCart.innerHTML = "The cart is empty!";
-
 	} else {
 		let res = [];
 		let quantityArr = [];
 		let html = "";
-		res = allCameras.filter(camera => articles?.products.find(element => {
-
-			if (camera.id === element.id) {
-				return quantityArr.push(element.quantity)
-			}
-		}));
-		res.forEach((item, index) => html += makeCartItem({ ...item, quantity: quantityArr[index] }))
+		res = allCameras.filter((camera) =>
+			articles?.products.find((element) => {
+				if (camera.id === element.id) {
+					return quantityArr.push(element.quantity);
+				}
+			})
+		);
+		res.forEach((item, index) => (html += makeCartItem({ ...item, quantity: quantityArr[index] })));
 		productCart.innerHTML = html;
 	}
 }
@@ -595,7 +609,7 @@ function calculateTotalCash() {
 	const total = document.querySelectorAll(".total");
 	const sumId = document.querySelector("#sum");
 	let sum = 0;
-	total.forEach(price => sum += Number(price.innerText))
+	total.forEach((price) => (sum += Number(price.innerText)));
 	sumId.innerHTML = sum;
 }
 function submit() {
@@ -603,8 +617,8 @@ function submit() {
 	const isValidForm = checkForm();
 
 	console.log(isValidForm, cartCount);
-	if ((cartCount == 0 || !cartCount) || !isValidForm) {
-		formContainer.classList.add("error-shake")
+	if (cartCount == 0 || !cartCount || !isValidForm) {
+		formContainer.classList.add("error-shake");
 		setTimeout(() => formContainer.classList.remove("error-shake"), 1000);
 	} else {
 		console.log("Uspesno ste narucili kameru");
@@ -634,14 +648,11 @@ function checkField(inputName, regularExpression, errMsg) {
 	if (inputName.value === "") {
 		inputName.style.border = "1px solid #ff0000";
 		errMsg.innerHTML = "Name field can't be empty.";
-	}
-	else {
+	} else {
 		if (!regularExpression.test(inputName.value)) {
 			inputName.style.border = "1px solid #ff0000";
-			errMsg.innerHTML = 'Name is not in valid format. Name must start with first capital letter and to have minimum 3 characters and maximum 14 characters.';
-
-		}
-		else {
+			errMsg.innerHTML = "Name is not in valid format. Name must start with first capital letter and to have minimum 3 characters and maximum 14 characters.";
+		} else {
 			inputName.style.border = "1px solid #ced4da";
 			errMsg.innerHTML = "";
 			isValid = true;
