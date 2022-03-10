@@ -41,10 +41,11 @@ const btnCart = document.querySelector("#btn-cart");
 const nameId = document.querySelector("#name");
 const email = document.querySelector("#email");
 const address = document.querySelector("#address");
-const regExpName = /^[A-ZŠĐŽČĆ][a-zšđžčć]{2,12}$/;
+const regExpName = /^[A-ZŠĐŽČĆ][a-zšđžčć]{2,20}$/;
 const regExpMail = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 const regExpAddr = /[A-ZČĆŽŠĐ1-9]([a-zčćžšđ0-9]{2,80}\s)+([0-9]{1,4}[a-zžđ]*|bb)$/;
 
+const infoModal = document.querySelector("#info-modal-container");
 let infoModalCounter = 0;
 
 window.addEventListener("load", function () {
@@ -157,10 +158,10 @@ function renderBrands(brands) {
 // Cameras
 function renderCameras(cameras) {
 	allCameras = cameras;
-	// if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
-	// 	//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
-	// 	return;
-	// }
+	if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
+		//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
+		return;
+	}
 	const filteredArray = filtered(allCameras, searchQuery, sortType, filterCameraBrandsArr, currentPage);
 	let pageNumber = null;
 	let totalPages = 1;
@@ -392,6 +393,7 @@ function toggleCart() {
 				btn.addEventListener("click", function () {
 					removeFromCart(Number(this.dataset.id));
 					this.parentElement.parentElement.remove();
+					calculateTotalCash();
 				});
 			});
 
@@ -469,19 +471,12 @@ function showCamera(model) {
 		let itemsCart = Number(itemsInCart.innerText);
 		let cart = null;
 
-		const infoModal = document.querySelector("#info-modal-container");
-
 		if (infoModalCounter === 4) {
 			infoModal.innerHTML = "";
 			infoModalCounter = 0;
 		}
 
-		const infoCard = document.createElement("div");
-		const cardContent = document.createTextNode("You have successfully added an item to the cart");
-		infoCard.setAttribute("class", "alert alert-warning info");
-		infoCard.appendChild(cardContent);
-		infoModal.appendChild(infoCard);
-		// infoModal.innerHTML += `<div class="alert alert-primary info">You have successfully added an item to the cart</div>`;
+		displayInfoCard("You have successfully added an item to the cart", infoModal);
 		infoModalCounter++; // infoModal.classList.remove("d-none");
 
 		if (JSON.parse(localStorage.getItem("cart")) !== null) {
@@ -533,22 +528,22 @@ function removeFromCart(modelId) {
 	const article = fetchCart(order, id);
 
 	let newState = order.products.filter((e) => e.id != article.id);
-	if (newState.length === 0) {
-		let ispis = "<h1 class='w-100 text-center'>The cart is empty</h1>";
-		// let korpaTabela = document.querySelector("#korpaTabela").innerHTML = ispis
-		console.log(ispis);
-	}
-	console.log(newState);
+	// if (newState.length === 0) {
+	// 	let ispis = "<h1 class='w-100 text-center'>The cart is empty</h1>";
+	// 	// let korpaTabela = document.querySelector("#korpaTabela").innerHTML = ispis
+	// 	console.log(ispis);
+	// }
+	// console.log(newState);
 	newState = {
 		products: newState,
 	};
 	itemsInCart.innerHTML = Number(localStorage.getItem("cart-counter")) - 1;
+
 	localStorage.setItem("cart-counter", Number(itemsInCart.innerHTML)); // Novi broj artikala u korpi, nakon brisanja
 	if (Number(itemsInCart.innerHTML) === 0) {
 		renderCart(newState);
 	}
-
-	return localStorage.setItem("cart", JSON.stringify(newState));
+	localStorage.setItem("cart", JSON.stringify(newState));
 }
 function renderCart(articles) {
 	const productCart = document.querySelector("#product-cart");
@@ -557,6 +552,7 @@ function renderCart(articles) {
 		formSubmit.classList.add("d-none");
 		productCart.innerHTML = "The cart is empty!";
 	} else {
+		formSubmit.classList.remove("d-none");
 		let res = [];
 		let quantityArr = [];
 		let html = "";
@@ -579,7 +575,10 @@ function setItemToLS(naziv, porudzbine) {
 function getItemFromLS(name) {
 	return JSON.parse(localStorage.getItem(name));
 }
- */
+*/
+function clearItemFromLS(name) {
+	return localStorage.removeItem(name);
+}
 
 function makeCartItem(item) {
 	return `
@@ -615,27 +614,33 @@ function calculateTotalCash() {
 function submit() {
 	const formContainer = document.querySelector("#form-container");
 	const isValidForm = checkForm();
-
+	console.log("IS VALID FORM JE " + isValidForm);
 	console.log(isValidForm, cartCount);
-	if (cartCount == 0 || !cartCount || !isValidForm) {
+	if (cartCount == 0 || !isValidForm) {
+		console.log("OVDE");
 		formContainer.classList.add("error-shake");
 		setTimeout(() => formContainer.classList.remove("error-shake"), 1000);
 	} else {
-		console.log("Uspesno ste narucili kameru");
+		console.log("ua");
+		displayInfoCard("You have make successfullt order.");
+		clearItemFromLS("cart");
+		clearItemFromLS("cart-counter");
+		setTimeout(() => (window.location = "/index.html"), 2000);
 	}
 }
 function checkForm() {
 	let isValid = false;
 	let errorCounter = 0;
-	isValid = checkField(nameId, regExpName, errName);
+	let isValidField;
 
-	if (!isValid) errorCounter++;
-	isValid = checkField(email, regExpMail, errEmail);
+	isValidField = checkField(nameId, regExpName, errName);
+	if (!isValidField) errorCounter++;
 
-	if (!isValid) errorCounter++;
-	isValid = checkField(address, regExpAddr, errAddress);
+	isValidField = checkField(email, regExpMail, errEmail);
+	if (!isValidField) errorCounter++;
 
-	if (!isValid) errorCounter++;
+	isValidField = checkField(address, regExpAddr, errAddress);
+	if (!isValidField) errorCounter++;
 
 	if (errorCounter === 0) {
 		isValid = true;
@@ -659,4 +664,12 @@ function checkField(inputName, regularExpression, errMsg) {
 		}
 	}
 	return isValid;
+}
+
+function displayInfoCard(message) {
+	const infoCard = document.createElement("div");
+	const cardContent = document.createTextNode(message);
+	infoCard.setAttribute("class", "alert alert-warning info");
+	infoCard.appendChild(cardContent);
+	infoModal.appendChild(infoCard);
 }

@@ -197,6 +197,7 @@ li > button.btn:focus {
 }
 #modal.modal {
 	overflow: hidden;
+	z-index: 9999;
 }
 .modal {
 	max-width: 400px;
