@@ -1,8 +1,9 @@
 /**
- * 1. Na index.htmlu kad se dodje skroluje, ne gubi se nav bg
  * 2. Treba da se nav ispisuje dinamicki
  * 4. Kad je upaljen mobile nav i cart, da radi po principu accordiona, jedan od ta dva sme da bude upaljen
 5. Kad uradim delete iz korpe ne updatuje se cena
+6. U indexu skloniti karosel
+7. Kad se otvori modal da moze bilo gde da se klikne da se zatvori
 */
 
 const BASE_URL = "assets/data";
@@ -39,6 +40,7 @@ const btnSubmit = document.querySelector("#btn-submit");
 const btnCart = document.querySelector("#btn-cart");
 
 const nameId = document.querySelector("#name");
+const lastName = document.querySelector("#last-name");
 const email = document.querySelector("#email");
 const address = document.querySelector("#address");
 const regExpName = /^[A-ZŠĐŽČĆ][a-zšđžčć]{2,20}$/;
@@ -51,12 +53,10 @@ let infoModalCounter = 0;
 window.addEventListener("load", function () {
 	onReady(onReadyCallback);
 
-	//Ovo sa ternarnim odraditi
-	if (this.scrollY >= 50) {
-		header.classList.add("bg-dark", "size");
-	} else {
-		header.classList.remove("bg-dark", "size");
-	}
+	fetchData(BASE_URL + "/nav.json", renderLinks);
+	// checkActivePage()
+
+	this.scrollY >= 50 ? header.classList.add("bg-dark", "size") : header.classList.remove("bg-dark", "size");
 
 	if (this.window.location.pathname === "/shop.html") {
 		search.value = "";
@@ -72,6 +72,7 @@ window.addEventListener("load", function () {
 		btnSubmit.addEventListener("click", submit);
 
 		nameId.addEventListener("blur", () => checkField(nameId, regExpName, errName));
+		lastName.addEventListener("blur", () => checkField(lastName, regExpName, errLastName));
 		email.addEventListener("blur", () => checkField(email, regExpMail, errEmail));
 		address.addEventListener("blur", () => checkField(address, regExpAddr, errAddress));
 	}
@@ -153,6 +154,31 @@ function renderBrands(brands) {
 	brandsID.innerHTML = html;
 
 	fetchData(BASE_URL + "/cameras.json", renderCameras);
+}
+
+function renderLinks(links) {
+	const usefulLeft = document.querySelector("#useful-left");
+	const usefulRight = document.querySelector("#useful-right");
+	const ulDesktopMenu = document.querySelector("#ul-desktop-menu");
+	const ulMobileMenu = document.querySelector("#ul-mobile-menu");
+
+	addLinks(links, ulDesktopMenu, [0, 3], "list-group-item d-none d-sm-none d-md-block dinamicanIspis");
+	addLinks(links, ulMobileMenu, [0, 3], "list-group-item d-block d-md-none");
+	addLinks(links, usefulLeft, [4, 5]); //Ovo od 4 do 5 treba da ide i da iz linka ispise te elemente
+	addLinks(links, usefulRight, [6, 9]);
+}
+
+function addLinks(data, idAttr, len, className = null) {
+	let html = "";
+	data.forEach((link, index) => {
+		if (index >= len[0] && index < len[1]) {
+			html += makeListItem(link.name, className, link.href);
+		} else if (index >= len[0] && index <= len[1]) {
+			html += makeListItem(link.name, className, link.href);
+		}
+	});
+
+	idAttr.innerHTML = html;
 }
 
 // Cameras
@@ -297,6 +323,11 @@ function addCameras(cameras, pageIndex) {
 		productModal.classList.toggle("show");
 		productModal.style.display = "none";
 	});
+
+	productModal.addEventListener("click", function () {
+		productModal.classList.toggle("show");
+		productModal.style.display = "none";
+	});
 }
 
 function makeCamera(camera) {
@@ -322,10 +353,18 @@ function makeCamera(camera) {
  * @param {String} className
  * @returns
  */
-function makeListItem(item, className) {
-	return `<li class="list-group-item">
-    <input type="checkbox" value="${item.id}" class="${className}" name="${className}"/> ${item.name}
-</li>`;
+function makeListItem(item, className, aHref = null) {
+	if (aHref === null) {
+		return `<li class="list-group-item">
+		<input type="checkbox" value="${item.id}" class="${className}" name="${className}"/> ${item.name}
+	</li>`;
+	}
+
+	if (className === null) {
+		return `<li class="list-group-item"><a href="${aHref}">${item}</a></li>`;
+	}
+
+	return `<li class="${className}"><a href="${aHref}">${item}</a></li>`;
 }
 
 /**
@@ -528,12 +567,6 @@ function removeFromCart(modelId) {
 	const article = fetchCart(order, id);
 
 	let newState = order.products.filter((e) => e.id != article.id);
-	// if (newState.length === 0) {
-	// 	let ispis = "<h1 class='w-100 text-center'>The cart is empty</h1>";
-	// 	// let korpaTabela = document.querySelector("#korpaTabela").innerHTML = ispis
-	// 	console.log(ispis);
-	// }
-	// console.log(newState);
 	newState = {
 		products: newState,
 	};
@@ -568,16 +601,15 @@ function renderCart(articles) {
 	}
 }
 
-/**
-function setItemToLS(naziv, porudzbine) {
-	return localStorage.setItem(naziv, JSON.stringify(porudzbine));
+function setItemToLS(keyName, item) {
+	return localStorage.setItem(keyName, JSON.stringify(item));
 }
-function getItemFromLS(name) {
-	return JSON.parse(localStorage.getItem(name));
+function getItemFromLS(keyName) {
+	return JSON.parse(localStorage.getItem(keyName));
 }
-*/
-function clearItemFromLS(name) {
-	return localStorage.removeItem(name);
+
+function clearItemFromLS(keyName) {
+	return localStorage.removeItem(keyName);
 }
 
 function makeCartItem(item) {
@@ -607,24 +639,26 @@ function makeCartItem(item) {
 function calculateTotalCash() {
 	const total = document.querySelectorAll(".total");
 	const sumId = document.querySelector("#sum");
+
 	let sum = 0;
+
 	total.forEach((price) => (sum += Number(price.innerText)));
+
 	sumId.innerHTML = sum;
 }
 function submit() {
 	const formContainer = document.querySelector("#form-container");
 	const isValidForm = checkForm();
-	console.log("IS VALID FORM JE " + isValidForm);
-	console.log(isValidForm, cartCount);
+
 	if (cartCount == 0 || !isValidForm) {
-		console.log("OVDE");
 		formContainer.classList.add("error-shake");
 		setTimeout(() => formContainer.classList.remove("error-shake"), 1000);
 	} else {
-		console.log("ua");
 		displayInfoCard("You have make successfullt order.");
+
 		clearItemFromLS("cart");
 		clearItemFromLS("cart-counter");
+
 		setTimeout(() => (window.location = "/index.html"), 2000);
 	}
 }
@@ -634,6 +668,9 @@ function checkForm() {
 	let isValidField;
 
 	isValidField = checkField(nameId, regExpName, errName);
+	if (!isValidField) errorCounter++;
+
+	isValidField = checkField(lastName, regExpName, errLastName);
 	if (!isValidField) errorCounter++;
 
 	isValidField = checkField(email, regExpMail, errEmail);
@@ -669,7 +706,9 @@ function checkField(inputName, regularExpression, errMsg) {
 function displayInfoCard(message) {
 	const infoCard = document.createElement("div");
 	const cardContent = document.createTextNode(message);
+
 	infoCard.setAttribute("class", "alert alert-warning info");
+
 	infoCard.appendChild(cardContent);
 	infoModal.appendChild(infoCard);
 }

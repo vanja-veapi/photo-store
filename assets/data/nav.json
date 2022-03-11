@@ -13,5 +13,40 @@
 		"id": 3,
 		"href": "/contact.html",
 		"name": "Contact"
+	},
+	{
+		"id": 4,
+		"href": "/about.html",
+		"name": "About"
+	},
+	{
+		"id": 5,
+		"href": "Dokumentacija",
+		"name": "Documentation"
+	},
+	{
+		"id": 6,
+		"href": "Habgit",
+		"name": "Github"
+	},
+	{
+		"id": 7,
+		"href": "fejsbuk",
+		"name": "Facebook"
+	},
+	{
+		"id": 8,
+		"href": "pticica",
+		"name": "Twitter"
+	},
+	{
+		"id": 9,
+		"href": "linkedin",
+		"name": "Linkedin"
+	},
+	{
+		"id": 10,
+		"href": "eemail",
+		"name": "Email"
 	}
 ]

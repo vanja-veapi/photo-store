@@ -22,28 +22,12 @@
 
 		<div id="modal" class="modal bg-white d-block shadow">
 			<div class="container-fluid mt-5">
-				<div id="product-cart" class="row border-bottom mb-3 ms-1">
-					<div class="col-4">
-						<img src="assets/images/products/Canon-EOS-250D-18-55-IS-STM.jpg" alt="Slika 1" class="img-fluid" />
+				<div id="product-cart" class="row border-bottom mb-3 ms-1"></div>
+				<div id="form-submit" class="d-flex flex-column w-50 ms-3">
+					<div class="sum-container d-flex">
+						<p class="h5">Sum:</p>
+						<p id="sum" class="h5 ms-3">0</p>
 					</div>
-					<div class="col-8">
-						<div class="d-flex">
-							<p class="me-3">Model:</p>
-							<p>Nikon</p>
-						</div>
-						<div class="d-flex">
-							<p class="me-3">Price</p>
-							<p>300</p>
-						</div>
-						<div class="d-flex">
-							<p class="me-3">Kolicina:</p>
-							<input type="number" id="quantity" class="w-25 form-control" value="1" />
-						</div>
-					</div>
-				</div>
-				<div id="form-submit" class="d-flex">
-					<p class="h5">Sum:</p>
-					<p id="sum" class="h5 ms-3">0</p>
 					<a href="contact.html" class="btn btn-primary">Checkout</a>
 				</div>
 			</div>
@@ -54,27 +38,29 @@
 			<section class="header-bg position-relative">
 				<header class="header bg-dark d-flex justify-content-between align-items-center position-fixed w-100">
 					<a href="index.html"><img src="assets/images/logo-cart-1.png" alt="Logo" class="img-fluid logo ms-4" /></a>
-					<nav class="me-4 navbar-dark">
-						<ul class="d-flex align-items-center">
+					<nav class="me-4 navbar-dark d-flex">
+						<ul id="ul-desktop-menu" class="d-flex align-items-center">
 							<li class="list-group-item d-none d-sm-none d-md-block"><a href="#" class="active">Home</a></li>
 							<li class="list-group-item d-none d-sm-none d-md-block"><a href="shop.html">Shop</a></li>
 							<li class="list-group-item d-none d-sm-none d-md-block"><a href="contact.html">Contact</a></li>
-							<li id="hamburger" class="list-group-item d-block d-md-none text-white">
-								<button class="navbar-toggler">
-									<span class="navbar-toggler-icon"></span>
-								</button>
-							</li>
-							<li id="cart" class="list-group-item cart position-relative">
-								<p id="items-in-cart" class="articals-in-cart bg-primary position-absolute text-center">0</p>
-								<button class="btn position-relative"><i class="fa fa-shopping-cart text-white"></i></button>
-							</li>
+							<li class="list-group-item d-none d-sm-none d-md-block"><a href="contact.html">About</a></li>
 						</ul>
+						<div id="hamburger" class="d-block d-md-none text-white me-3">
+							<button class="navbar-toggler">
+								<span class="navbar-toggler-icon"></span>
+							</button>
+						</div>
+						<div id="cart" class="cart position-relative">
+							<p id="items-in-cart" class="articals-in-cart bg-primary position-absolute text-center">0</p>
+							<button class="btn position-relative"><i class="fa fa-shopping-cart text-white"></i></button>
+						</div>
 					</nav>
 					<nav id="mobile-menu" class="header w-100 d-block d-md-none position-absolute position-relative d-none">
-						<ul class="w-100 d-flex align-items-center flex-column bg-dark">
+						<ul id="ul-mobile-menu" class="w-100 d-flex align-items-center flex-column bg-dark">
 							<li class="list-group-item d-block d-md-none"><a href="index.html" class="active">Home</a></li>
 							<li class="list-group-item d-block d-md-none"><a href="shop.html">Shop</a></li>
 							<li class="list-group-item d-block d-md-none"><a href="contact.html">Contact</a></li>
+							<li class="list-group-item d-block d-md-none"><a href="contact.html">About</a></li>
 						</ul>
 					</nav>
 				</header>
@@ -144,22 +130,22 @@
 					<div class="row align-items-center">
 						<div class="col-lg-4 d-flex flex-column align-items-center">
 							<h5>Useful links</h5>
-							<ul class="list-group">
+							<ul id="useful-left" class="list-group">
 								<li class="list-group-item"><a href="#">Documentation</a></li>
-								<li class="list-group-item"><a href="#">Github</a></li>
+								<!-- <li class="list-group-item"><a href="#">Github</a></li> -->
 							</ul>
 						</div>
 						<div class="col-lg-4 d-flex flex-column align-items-center my-4 my-lg-0">
-							<img src="assets/images/logo-cart-1.png" alt="logo" class="img-fluid logo-footer" />
+							<a href="index.html"><img src="assets/images/logo-cart-1.png" alt="logo" class="img-fluid logo-footer" /></a>
 							<p class="text-white fw-light">Photo Store</p>
 						</div>
 						<div class="col-lg-4 d-flex flex-column align-items-center">
 							<h5>Connect</h5>
-							<ul class="list-group">
+							<ul id="useful-right" class="list-group">
 								<li class="list-group-item"><a href="#">Facebook</a></li>
-								<li class="list-group-item"><a href="#">Twitter</a></li>
+								<!-- <li class="list-group-item"><a href="#">Twitter</a></li>
 								<li class="list-group-item"><a href="#">LinkedIn</a></li>
-								<li class="list-group-item"><a href="#">E-mail</a></li>
+								<li class="list-group-item"><a href="#">E-mail</a></li> -->
 							</ul>
 						</div>
 					</div>
