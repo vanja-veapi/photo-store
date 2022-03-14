@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Nikon"
+    },
+    {
+        "id": 2,
+        "name": "Canon"
+    },
+    {
+        "id": 3,
+        "name": "Fuji"
+    },
+    {
+        "id": 4,
+        "name": "Sony"
+    },
+    {
+        "id": 5,
+        "name": "Panasonic"
+    },
+    {
+        "id": 6,
+        "name": "Pentax"
+    }
+]

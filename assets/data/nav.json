@@ -1,0 +1,52 @@
+[
+	{
+		"id": 1,
+		"href": "/index.html",
+		"name": "Home"
+	},
+	{
+		"id": 2,
+		"href": "/shop.html",
+		"name": "Shop"
+	},
+	{
+		"id": 3,
+		"href": "/contact.html",
+		"name": "Contact"
+	},
+	{
+		"id": 4,
+		"href": "/about.html",
+		"name": "About"
+	},
+	{
+		"id": 5,
+		"href": "dokumentaija.pdf",
+		"name": "Documentation"
+	},
+	{
+		"id": 6,
+		"href": "https://github.com/vanja-veapi/photo-store",
+		"name": "Github"
+	},
+	{
+		"id": 7,
+		"href": "https://www.facebook.com/vanja.veapi/",
+		"name": "Facebook"
+	},
+	{
+		"id": 8,
+		"href": "https://www.twitter.com/",
+		"name": "Twitter"
+	},
+	{
+		"id": 9,
+		"href": "https://www.linkedin.com/in/vanjaveapi/",
+		"name": "Linkedin"
+	},
+	{
+		"id": 10,
+		"href": "eemail",
+		"name": "Email"
+	}
+]

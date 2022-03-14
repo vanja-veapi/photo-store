@@ -1,0 +1,9 @@
+$table->id();
+//            $table->string("name");
+//            $table->string("img");
+//            $table->decimal("price");
+//            $table->decimal("old_price");
+//            $table->longText("description");
+//            $table->unsignedBigInteger("brandId");
+//            $table->foreign("brandId")->on("brands");
+//            $table->timestamps();
