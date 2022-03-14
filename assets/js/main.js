@@ -677,13 +677,24 @@ function checkForm() {
 
 function checkField(inputName, regularExpression, errMsg) {
 	let isValid = false;
+	let message = "";
+	switch (inputName.id) {
+		case "email":
+			message = "Email field is not in faild format. Must contain @gmail.com (ex)";
+			break;
+		case "address":
+			message = "Address is not in valid format. Must contain street name and number.";
+			break;
+		default:
+			message = "Field is not in valid format. Field must start with first capital letter and to have minimum 3 characters and maximum 14 characters.";
+	}
 	if (inputName.value === "") {
 		inputName.style.border = "1px solid #ff0000";
-		errMsg.innerHTML = "Name field can't be empty.";
+		errMsg.innerHTML = "Field can't be empty.";
 	} else {
 		if (!regularExpression.test(inputName.value)) {
 			inputName.style.border = "1px solid #ff0000";
-			errMsg.innerHTML = "Name is not in valid format. Name must start with first capital letter and to have minimum 3 characters and maximum 14 characters.";
+			errMsg.innerHTML = message;
 		} else {
 			inputName.style.border = "1px solid #ced4da";
 			errMsg.innerHTML = "";
