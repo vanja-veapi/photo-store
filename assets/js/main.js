@@ -43,6 +43,7 @@ const infoModal = document.querySelector("#info-modal-container");
 let infoModalCounter = 0;
 
 window.addEventListener("load", function () {
+	console.log("JS Loaded...");
 	onReady(onReadyCallback);
 
 	fetchData(BASE_URL + "/nav.json", renderLinks);
