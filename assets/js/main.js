@@ -1,11 +1,3 @@
-/**
- * 2. Treba da se nav ispisuje dinamicki
- * 4. Kad je upaljen mobile nav i cart, da radi po principu accordiona, jedan od ta dva sme da bude upaljen
-5. Kad uradim delete iz korpe ne updatuje se cena
-6. U indexu skloniti karosel
-7. Kad se otvori modal da moze bilo gde da se klikne da se zatvori
-*/
-
 const BASE_URL = "assets/data";
 
 const header = document.querySelector("header");
@@ -86,13 +78,11 @@ window.addEventListener("load", function () {
 window.addEventListener("scroll", function () {
 	if (this.scrollY >= 50) {
 		header.classList.add("bg-dark", "size");
-		// modal.style.top = "80px";
 	} else if (this.scrollY <= 50 && mobileMenu?.classList.contains("d-none")) {
 		header.classList.remove("bg-dark");
 		modal.style.removeProperty("top");
 	}
 
-	//Ovo sa ternarnim
 	if (this.scrollY <= 50) {
 		header.classList.remove("size");
 	}
@@ -413,8 +403,6 @@ function updatePageNumber(pages) {
 
 	pagination.innerHTML = html;
 }
-//Paginacija radi, samo namestiti da posle filtriranja ostane ta strana...
-
 function toggleCart() {
 	let cart = JSON.parse(localStorage.getItem("cart"));
 	console.log(cart);

@@ -21,27 +21,27 @@
 	},
 	{
 		"id": 5,
-		"href": "Dokumentacija",
+		"href": "dokumentaija.pdf",
 		"name": "Documentation"
 	},
 	{
 		"id": 6,
-		"href": "Habgit",
+		"href": "https://github.com/vanja-veapi/photo-store",
 		"name": "Github"
 	},
 	{
 		"id": 7,
-		"href": "fejsbuk",
+		"href": "https://www.facebook.com/vanja.veapi/",
 		"name": "Facebook"
 	},
 	{
 		"id": 8,
-		"href": "pticica",
+		"href": "https://www.twitter.com/",
 		"name": "Twitter"
 	},
 	{
 		"id": 9,
-		"href": "linkedin",
+		"href": "https://www.linkedin.com/in/vanjaveapi/",
 		"name": "Linkedin"
 	},
 	{
