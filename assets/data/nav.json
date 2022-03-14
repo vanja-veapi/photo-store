@@ -1,27 +1,27 @@
 [
 	{
 		"id": 1,
-		"href": "/index.html",
+		"href": "./index.html",
 		"name": "Home"
 	},
 	{
 		"id": 2,
-		"href": "/shop.html",
+		"href": "./shop.html",
 		"name": "Shop"
 	},
 	{
 		"id": 3,
-		"href": "/contact.html",
+		"href": "./contact.html",
 		"name": "Contact"
 	},
 	{
 		"id": 4,
-		"href": "/about.html",
+		"href": "./about.html",
 		"name": "About"
 	},
 	{
 		"id": 5,
-		"href": "dokumentaija.pdf",
+		"href": "dokumentacija.pdf",
 		"name": "Documentation"
 	},
 	{
@@ -46,7 +46,7 @@
 	},
 	{
 		"id": 10,
-		"href": "eemail",
+		"href": "https://www.gmail.com/",
 		"name": "Email"
 	}
 ]
