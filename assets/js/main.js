@@ -649,7 +649,7 @@ function submit() {
 		clearItemFromLS("cart");
 		clearItemFromLS("cart-counter");
 
-		setTimeout(() => (window.location = "/index.html"), 2000);
+		setTimeout(() => (window.location = "/photo-store/index.html"), 2000);
 	}
 }
 function checkForm() {
