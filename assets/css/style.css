@@ -456,6 +456,12 @@ ul#pagination li.active > a {
 	.about-right {
 		max-width: 560px;
 	}
+	#brands-container h3 {
+		font-size: 20px;
+	}
+	#brands .list-group-item {
+		font-size: 14px;
+	}
 }
 @media screen and (max-width: 768px) {
 	.about-left h4 {
