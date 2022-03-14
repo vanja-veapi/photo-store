@@ -1,4 +1,4 @@
-const BASE_URL = "photo-store/assets/data";
+const BASE_URL = "assets/data";
 
 const header = document.querySelector("header");
 const products = document.querySelector("#products");
@@ -52,7 +52,7 @@ window.addEventListener("load", function () {
 
 	this.scrollY >= 50 ? header.classList.add("bg-dark", "size") : header.classList.remove("bg-dark", "size");
 
-	if (this.window.location.pathname === "/shop.html") {
+	if (this.window.location.pathname === "/photo-store/shop.html") {
 		search.value = "";
 		fetchData(BASE_URL + "/brands.json", renderBrands);
 	}
