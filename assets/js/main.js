@@ -1,4 +1,4 @@
-const BASE_URL = ".//photo-storeassets/data";
+const BASE_URL = "photo-store/assets/data";
 
 const header = document.querySelector("header");
 const products = document.querySelector("#products");
