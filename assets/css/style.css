@@ -448,6 +448,12 @@ ul#pagination li.active > a {
 .slide-right {
 	animation: slideRight 0.5s;
 }
+.author a {
+	color: #343a40;
+}
+.author a:hover {
+	color: var(--primary-color);
+}
 @media screen and (max-width: 992px) {
 	section.about > .container {
 		flex-wrap: wrap;
