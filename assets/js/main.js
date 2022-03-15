@@ -43,6 +43,8 @@ const infoModal = document.querySelector("#info-modal-container");
 let infoModalCounter = 0;
 
 window.addEventListener("load", function () {
+	console.log("JS Loaded...");
+	console.log(BASE_URL);
 	onReady(onReadyCallback);
 
 	fetchData(BASE_URL + "/nav.json", renderLinks);
@@ -50,16 +52,16 @@ window.addEventListener("load", function () {
 
 	this.scrollY >= 50 ? header.classList.add("bg-dark", "size") : header.classList.remove("bg-dark", "size");
 
-	if (this.window.location.pathname === "/shop.html") {
+	if (this.window.location.pathname === "/photo-store/shop.html") {
 		search.value = "";
 		fetchData(BASE_URL + "/brands.json", renderBrands);
 	}
 
-	if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
+	if (window.location.pathname === "/photo-store/index.html" || window.location.pathname === "/photo-store/" || window.location.pathname === "/photo-store/contact.html") {
 		fetchData(BASE_URL + "/cameras.json", renderCameras);
 	}
 
-	if (this.window.location.pathname === "/contact.html") {
+	if (this.window.location.pathname === "/photo-store/contact.html") {
 		btnCart.addEventListener("click", toggleCart);
 		btnSubmit.addEventListener("click", submit);
 
@@ -174,7 +176,7 @@ function addLinks(data, idAttr, len, className = null) {
 // Cameras
 function renderCameras(cameras) {
 	allCameras = cameras;
-	if (window.location.pathname === "/index.html" || window.location.pathname === "/" || window.location.pathname === "/contact.html") {
+	if (window.location.pathname === "/photo-store/index.html" || window.location.pathname === "/photo-store/" || window.location.pathname === "/photo-store/contact.html") {
 		//Samo da mi pokupi sve kamere iz jsona i da ih stavi u promenljivu
 		return;
 	}
@@ -647,7 +649,7 @@ function submit() {
 		clearItemFromLS("cart");
 		clearItemFromLS("cart-counter");
 
-		setTimeout(() => (window.location = "/index.html"), 2000);
+		setTimeout(() => (window.location = "/photo-store/index.html"), 2000);
 	}
 }
 function checkForm() {
